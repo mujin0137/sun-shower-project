@@ -4,7 +4,7 @@ import "../CSS/calendarweek.css";
 const CalendarWeek = () => {
   return (
     <div className="calendar-week">
-      <h2>주간 캘린더</h2>
+      <h1>주간 캘린더</h1>
     </div>
   );
 };
