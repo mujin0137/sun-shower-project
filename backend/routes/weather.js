@@ -24,10 +24,10 @@ router.get("/current", async (req, res) => {
     await SearchHistory.create({
       type: "weather",
       location: {
-        name: city || weatherData.name,
+        name: city || weatherData.location.name,
         coordinates: {
-          lat: lat || weatherData.coord.lat,
-          lng: lon || weatherData.coord.lon,
+          lat: lat || weatherData.location.coordinates.lat,
+          lng: lon || weatherData.location.coordinates.lng,
         },
       },
     });
