@@ -1,4 +1,50 @@
 .transportation {
-  width: 100%;
-  background-color: antiquewhite;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 지하철 노선 색상 */
+.subway-line-1 {
+  background-color: #0052a4;
+  color: white;
+}
+
+.subway-line-2 {
+  background-color: #00a84d;
+  color: white;
+}
+
+.subway-line-3 {
+  background-color: #ef7c1c;
+  color: white;
+}
+
+.subway-line-4 {
+  background-color: #00a5de;
+  color: white;
+}
+
+.subway-line-5 {
+  background-color: #996cac;
+  color: white;
+}
+
+.subway-line-6 {
+  background-color: #cd7c2f;
+  color: white;
+}
+
+.subway-line-7 {
+  background-color: #747f00;
+  color: white;
+}
+
+.subway-line-8 {
+  background-color: #e6186c;
+  color: white;
+}
+
+.subway-line-9 {
+  background-color: #bb8336;
+  color: white;
 }

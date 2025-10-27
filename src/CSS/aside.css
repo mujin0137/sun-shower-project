@@ -1,0 +1,23 @@
+/* Aside (사이드바) 스타일 */
+
+/* 반응형: 499px 이하에서 사이드바 숨김 */
+@media (max-width: 499px) {
+  .MuiDrawer-root {
+    display: none !important;
+  }
+
+  .MuiDrawer-paper {
+    display: none !important;
+  }
+}
+
+/* 500px 이상에서 사이드바 표시 */
+@media (min-width: 500px) {
+  .MuiDrawer-root {
+    display: block !important;
+  }
+
+  .MuiDrawer-paper {
+    display: block !important;
+  }
+}
