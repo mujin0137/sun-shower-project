@@ -18,6 +18,18 @@ console.log(
   "- KAKAO_REST_API_KEY:",
   process.env.KAKAO_REST_API_KEY ? "설정됨" : "❌ 없음"
 );
+console.log(
+  "- ODSAY_API_KEY:",
+  process.env.ODSAY_API_KEY ? "설정됨" : "❌ 없음"
+);
+console.log(
+  "- NAVER_CLIENT_ID:",
+  process.env.NAVER_CLIENT_ID ? "설정됨" : "❌ 없음"
+);
+console.log(
+  "- NAVER_CLIENT_SECRET:",
+  process.env.NAVER_CLIENT_SECRET ? "설정됨" : "❌ 없음"
+);
 console.log("");
 
 // Express 앱 초기화
@@ -35,8 +47,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// MongoDB 연결
-connectDB();
+// MongoDB 연결 (선택적)
+connectDB().catch((err) => {
+  console.log("⚠️  MongoDB 연결 실패 - 즐겨찾기 기능은 사용할 수 없습니다");
+  console.log("⚠️  날씨/교통 기능은 정상 작동합니다");
+});
 
 // 라우트
 app.use("/api/weather", require("./routes/weather"));
@@ -60,7 +75,7 @@ app.get("/", (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
-    error: "Something went wrong!",
+    error: "머가 문제냐",
     message: err.message,
   });
 });
@@ -68,5 +83,5 @@ app.use((err, req, res, next) => {
 // 서버 시작
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🚀 가보자 가보자~ ${PORT}`);
 });

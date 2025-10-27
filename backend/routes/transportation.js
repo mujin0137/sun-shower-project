@@ -6,13 +6,13 @@ const SearchHistory = require("../models/SearchHistory");
 // 길찾기 - 경로 검색
 router.get("/directions", async (req, res) => {
   try {
-    const { origin, destination, mode } = req.query;
+    const { origin, destination, mode, option } = req.query;
 
     if (!origin || !destination) {
       return res.status(400).json({
         error: "origin과 destination 파라미터가 필요합니다.",
         example:
-          "/api/transportation/directions?origin=서울역&destination=강남역&mode=transit",
+          "/api/transportation/directions?origin=서울역&destination=강남역&mode=transit&option=0",
       });
     }
 
@@ -20,6 +20,7 @@ router.get("/directions", async (req, res) => {
       origin,
       destination,
       mode: mode || "transit", // transit, driving, walking
+      option: option ? parseInt(option) : 0, // 0:최적, 1:최소시간, 2:최소환승, 3:최소도보
     });
 
     // 검색 기록 저장

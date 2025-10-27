@@ -14,6 +14,7 @@ import {
   DirectionsBus,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import "../CSS/aside.css";
 
 const Aside = () => {
   const navigate = useNavigate();

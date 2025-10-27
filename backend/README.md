@@ -28,12 +28,32 @@ cp env.example .env
 3. API Key 발급 (무료 플랜: 60 calls/minute)
 4. `.env` 파일의 `OPENWEATHER_API_KEY`에 입력
 
-**길찾기 API (Kakao)**
+**길찾기 API**
+
+**Kakao REST API** (장소 검색, 지오코딩)
 
 1. https://developers.kakao.com 접속
 2. 로그인 후 "내 애플리케이션" 생성
 3. "앱 키" > "REST API 키" 복사
 4. `.env` 파일의 `KAKAO_REST_API_KEY`에 입력
+
+**Naver Directions API** (자동차 경로)
+
+1. https://www.ncloud.com 접속
+2. 회원가입/로그인 (개인 계정 가능)
+3. Console > Services > AI·NAVER API 선택
+4. Application 등록:
+   - Application 이름: sun-shower
+   - 서비스 선택: Maps > Directions
+   - Web 서비스 URL: http://localhost:3000
+5. `Client ID`와 `Client Secret` 복사
+6. `.env` 파일의 `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`에 입력
+
+**ODsay 대중교통 API** (버스, 지하철 경로)
+
+1. https://lab.odsay.com 접속
+2. 회원가입 후 API 키 발급
+3. `.env` 파일의 `ODSAY_API_KEY`에 입력
 
 **MongoDB**
 
@@ -135,9 +155,9 @@ GET /api/transportation/directions?origin=서울역&destination=강남역&mode=t
 
 **mode 옵션:**
 
-- `transit`: 대중교통 (기본값)
-- `driving`: 자동차
-- `walking`: 도보
+- `transit`: 대중교통 (기본값, ODsay API)
+- `driving`: 자동차 (Naver Directions API)
+- `walking`: 도보 (직선 거리 계산)
 
 #### 경로 검색 (좌표)
 
