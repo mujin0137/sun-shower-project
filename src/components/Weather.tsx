@@ -1,30 +1,22 @@
 import React, { useEffect, useState, useMemo } from "react";
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   CircularProgress,
-  Alert,
   Paper,
-  Chip,
-  Stack,
   Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
-import {
-  Cloud,
-  Opacity,
-  Air,
-  Thermostat,
-  LocationOn,
-} from "@mui/icons-material";
+import { WbSunny, WbCloudy } from "@mui/icons-material";
 import "../CSS/weather.css";
 
 interface CityWeather {
   city: string;
   name: string;
-  x: number; // 이미지 상의 X 좌표 (%)
-  y: number; // 이미지 상의 Y 좌표 (%)
+  x: number;
+  y: number;
   temperature?: number;
   weather?: string;
   description?: string;
@@ -62,13 +54,46 @@ interface WeatherDetail {
   };
 }
 
+interface HourlyForecast {
+  timestamp: string;
+  weather: {
+    main: string;
+    description: string;
+    icon: string;
+    iconUrl: string;
+  };
+  temperature: {
+    current: number;
+  };
+  details: {
+    pop: number;
+  };
+}
+
+interface DailyForecast {
+  date: string;
+  weather: {
+    icon: string;
+    iconUrl: string;
+  };
+  temperature: {
+    min: number;
+    max: number;
+  };
+  pop: number;
+}
+
 const Weather = () => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [citiesWeather, setCitiesWeather] = useState<CityWeather[]>([]);
-  const [selectedCity, setSelectedCity] = useState<WeatherDetail | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string>("Seoul");
+  const [currentWeather, setCurrentWeather] = useState<WeatherDetail | null>(
+    null
+  );
+  const [hourlyForecast, setHourlyForecast] = useState<HourlyForecast[]>([]);
+  const [dailyForecast, setDailyForecast] = useState<DailyForecast[]>([]);
 
-  // 주요 도시 목록 (이미지 상의 좌표로 변경)
+  // 주요 도시 목록 (이미지 상의 좌표)
   const majorCities = useMemo<CityWeather[]>(
     () => [
       { city: "Seoul", name: "서울", x: 52, y: 25 },
@@ -89,11 +114,10 @@ const Weather = () => {
     []
   );
 
-  // 날씨 데이터 가져오기
+  // 지도 위 도시 날씨 데이터 가져오기
   useEffect(() => {
-    const fetchWeatherData = async () => {
+    const fetchCitiesWeather = async () => {
       try {
-        setLoading(true);
         const promises = majorCities.map((city) =>
           fetch(`http://localhost:5000/api/weather/current?city=${city.city}`)
             .then((res) => res.json())
@@ -115,204 +139,305 @@ const Weather = () => {
 
         const results = await Promise.all(promises);
         setCitiesWeather(results);
-        setError("");
       } catch (err: any) {
-        setError("날씨 정보를 가져오는데 실패했습니다.");
         console.error(err);
+      }
+    };
+
+    fetchCitiesWeather();
+    const interval = setInterval(fetchCitiesWeather, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [majorCities]);
+
+  // 선택된 도시의 상세 날씨 + 예보 가져오기
+  useEffect(() => {
+    const fetchSelectedCityWeather = async () => {
+      try {
+        setLoading(true);
+
+        // 현재 날씨
+        const currentRes = await fetch(
+          `http://localhost:5000/api/weather/current?city=${selectedCity}`
+        );
+        const currentData = await currentRes.json();
+        setCurrentWeather(currentData);
+
+        // 예보
+        const forecastRes = await fetch(
+          `http://localhost:5000/api/weather/forecast?city=${selectedCity}`
+        );
+        const forecastData = await forecastRes.json();
+
+        // 시간별 예보 (6개)
+        setHourlyForecast(forecastData.forecasts.slice(0, 6));
+
+        // 일별 예보 (7일)
+        const daily = processDailyForecast(forecastData.forecasts);
+        setDailyForecast(daily);
+      } catch (err: any) {
+        console.error("날씨 정보 가져오기 실패:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchWeatherData();
-    // 5분마다 자동 갱신
-    const interval = setInterval(fetchWeatherData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [majorCities]);
+    fetchSelectedCityWeather();
+  }, [selectedCity]);
 
-  // 도시 클릭 핸들러
-  const handleCityClick = async (city: CityWeather) => {
-    console.log("🖱️ 도시 클릭:", city.city);
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/weather/current?city=${city.city}`
-      );
-      if (!response.ok) {
-        throw new Error("날씨 정보를 가져올 수 없습니다");
+  // 시간별 예보를 일별로 그룹화
+  const processDailyForecast = (forecasts: any[]): DailyForecast[] => {
+    const dailyMap = new Map<string, any[]>();
+
+    forecasts.forEach((item) => {
+      const date = new Date(item.timestamp).toLocaleDateString("ko-KR");
+      if (!dailyMap.has(date)) {
+        dailyMap.set(date, []);
       }
-      const data = await response.json();
-      console.log("✅ 상세 정보:", data);
-      setSelectedCity(data);
-    } catch (err) {
-      console.error("❌ 상세 정보 가져오기 실패:", err);
-      setError(`${city.name} 날씨 정보를 가져올 수 없습니다.`);
-    }
+      dailyMap.get(date)?.push(item);
+    });
+
+    const daily: DailyForecast[] = [];
+    let count = 0;
+
+    Array.from(dailyMap.entries()).forEach(([date, items]) => {
+      if (count >= 7) return;
+
+      const temps = items.map((i: any) => i.temperature.current);
+      const pops = items.map((i: any) => i.details.pop);
+
+      daily.push({
+        date,
+        weather: {
+          icon: items[0].weather.icon,
+          iconUrl: items[0].weather.iconUrl,
+        },
+        temperature: {
+          min: Math.round(Math.min(...temps)),
+          max: Math.round(Math.max(...temps)),
+        },
+        pop: Math.round(Math.max(...pops)),
+      });
+
+      count++;
+    });
+
+    return daily;
   };
+
+  // 도시 변경 핸들러
+  const handleCityChange = (event: SelectChangeEvent) => {
+    setSelectedCity(event.target.value);
+  };
+
+  // 날짜 포맷팅
+  const getDayLabel = (index: number) => {
+    const labels = ["오늘", "내일", "모레", "3일뒤", "4일뒤", "5일뒤", "6일뒤"];
+    return labels[index] || `${index}일뒤`;
+  };
+
+  if (loading && !currentWeather) {
+    return (
+      <Box
+        className="weather"
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box className="weather" sx={{ minHeight: "100vh", p: 3 }}>
-      <Typography
-        variant="h4"
-        sx={{ mb: 3, fontWeight: "bold", color: "white" }}
-      >
-        🌤️ 전국 날씨 지도
-      </Typography>
-
-      {loading && (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
-          <CircularProgress />
-        </Box>
-      )}
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      )}
-
       <Box
         sx={{
           display: "flex",
           gap: 3,
-          flexDirection: { xs: "column", md: "row" },
+          flexDirection: { xs: "column", lg: "row" },
         }}
       >
-        {/* 상세 정보 영역 */}
-        <Box sx={{ flex: 1 }}>
-          {selectedCity ? (
-            <Card elevation={3}>
-              <CardContent>
-                <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
-                  📍 {selectedCity.location.name}
-                </Typography>
+        {/* 왼쪽 영역 - 상세 정보 */}
+        <Box sx={{ flex: { xs: 1, lg: 1 }, minWidth: 0 }}>
+          {/* 도시 선택 & 현재 날씨 */}
+          <Paper
+            elevation={3}
+            sx={{
+              p: 3,
+              mb: 2,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              color: "white",
+            }}
+          >
+            <Select
+              value={selectedCity}
+              onChange={handleCityChange}
+              sx={{
+                mb: 2,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                color: "white",
+                "& .MuiSelect-icon": { color: "white" },
+                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              }}
+              fullWidth
+            >
+              {majorCities.map((city) => (
+                <MenuItem key={city.city} value={city.city}>
+                  {city.name}
+                </MenuItem>
+              ))}
+            </Select>
 
-                {/* 날씨 아이콘 */}
-                <Box sx={{ textAlign: "center", my: 3 }}>
-                  <img
-                    src={selectedCity.weather.iconUrl}
-                    alt={selectedCity.weather.description}
-                    style={{ width: 100, height: 100 }}
-                  />
-                  <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-                    {selectedCity.temperature.current}°C
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                    {selectedCity.weather.description}
+            {currentWeather && (
+              <Box>
+                <Typography variant="h2" sx={{ fontWeight: "bold", mb: 1 }}>
+                  {currentWeather.temperature.current}°
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
+                  습도 {currentWeather.details.humidity}%
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  최고 {currentWeather.temperature.max}° / 최저{" "}
+                  {currentWeather.temperature.min}°
+                </Typography>
+              </Box>
+            )}
+          </Paper>
+
+          {/* 초미세먼지/미세먼지/자외선 */}
+          <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ flex: 1, flexDirection: "column", py: 1 }}
+              >
+                <Typography variant="caption">초미세먼지</Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  보통
+                </Typography>
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ flex: 1, flexDirection: "column", py: 1 }}
+              >
+                <Typography variant="caption">미세먼지</Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  좋음
+                </Typography>
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ flex: 1, flexDirection: "column", py: 1 }}
+              >
+                <Typography variant="caption">자외선</Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  높음
+                </Typography>
+              </Button>
+            </Box>
+          </Paper>
+
+          {/* 시간별 예보 */}
+          <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                // backgroundColor: "red",
+                overflowX: "auto",
+                gap: 2,
+              }}
+            >
+              {hourlyForecast.map((item, index) => {
+                const hour = new Date(item.timestamp).getHours();
+                return (
+                  <Box
+                    key={index}
+                    sx={{
+                      minWidth: 60,
+                      textAlign: "center",
+                      backgroundColor: "#f5f5f5",
+                      borderRadius: 2,
+                      p: 2,
+                    }}
+                  >
+                    <Typography variant="caption" sx={{ display: "block" }}>
+                      {hour}시
+                    </Typography>
+                    <img
+                      src={item.weather.iconUrl}
+                      alt={item.weather.description}
+                      style={{ width: 40, height: 40 }}
+                    />
+                    <Typography variant="body2" fontWeight="bold">
+                      {Math.round(item.temperature.current)}°
+                    </Typography>
+                  </Box>
+                );
+              })}
+            </Box>
+          </Paper>
+
+          {/* 주간 예보 */}
+          <Paper elevation={3} sx={{ p: 2 }}>
+            {dailyForecast.map((day, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  py: 1,
+                  borderBottom:
+                    index < dailyForecast.length - 1
+                      ? "1px solid #eee"
+                      : "none",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ width: 60, fontWeight: "bold" }}
+                >
+                  {getDayLabel(index)}
+                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <WbSunny sx={{ fontSize: 20, color: "#FFA500" }} />
+                  <WbCloudy sx={{ fontSize: 20, color: "#808080" }} />
+                </Box>
+                <Box sx={{ flex: 1, ml: 2 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    {day.pop}%
                   </Typography>
                 </Box>
-
-                {/* 상세 정보 */}
-                <Stack spacing={2}>
-                  <Paper variant="outlined" sx={{ p: 2 }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <Thermostat color="primary" />
-                      <Box flex={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          체감온도
-                        </Typography>
-                        <Typography variant="h6">
-                          {selectedCity.temperature.feelsLike}°C
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-
-                  <Paper variant="outlined" sx={{ p: 2 }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <Opacity color="primary" />
-                      <Box flex={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          습도
-                        </Typography>
-                        <Typography variant="h6">
-                          {selectedCity.details.humidity}%
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-
-                  <Paper variant="outlined" sx={{ p: 2 }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <Air color="primary" />
-                      <Box flex={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          풍속
-                        </Typography>
-                        <Typography variant="h6">
-                          {selectedCity.details.windSpeed} m/s
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-
-                  <Paper variant="outlined" sx={{ p: 2 }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <Cloud color="primary" />
-                      <Box flex={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          구름
-                        </Typography>
-                        <Typography variant="h6">
-                          {selectedCity.details.clouds}%
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body2" color="text.secondary" mb={1}>
-                      온도 범위
-                    </Typography>
-                    <Stack direction="row" spacing={1}>
-                      <Chip
-                        label={`최저 ${selectedCity.temperature.min}°C`}
-                        color="info"
-                        size="small"
-                      />
-                      <Chip
-                        label={`최고 ${selectedCity.temperature.max}°C`}
-                        color="error"
-                        size="small"
-                      />
-                    </Stack>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card elevation={3}>
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  textAlign="center"
-                >
-                  🗺️ 지도에서 도시를 클릭하세요
+                <Typography variant="body2" fontWeight="bold">
+                  {day.temperature.max}°
                 </Typography>
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  textAlign="center"
-                  mt={2}
+                  sx={{ ml: 1 }}
                 >
-                  마커를 클릭하면 상세한 날씨 정보를 볼 수 있습니다.
+                  {day.temperature.min}°
                 </Typography>
-              </CardContent>
-            </Card>
-          )}
+              </Box>
+            ))}
+          </Paper>
         </Box>
-        {/* 지도 이미지 영역 */}
-        <Box sx={{ flex: { xs: "1", md: "2" } }}>
+
+        {/* 오른쪽 영역 - 지도 */}
+        <Box sx={{ flex: { xs: 1, lg: 2 } }}>
           <Paper
             elevation={3}
             sx={{
-              height: 600,
+              height: { xs: 500, lg: "100%" },
+              minHeight: 600,
               position: "relative",
               overflow: "hidden",
-              background: "linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              background: "#333",
             }}
           >
             {/* 한국 지도 영역 */}
@@ -321,88 +446,64 @@ const Weather = () => {
                 position: "relative",
                 width: "100%",
                 height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                // backgroundColor: "red",
               }}
             >
-              {/* 지도 배경 */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  width: "80%",
-                  height: "90%",
-                  background: "rgba(255, 255, 255, 0.3)",
-                  borderRadius: "20px",
-                  border: "2px solid rgba(255, 255, 255, 0.5)",
-                }}
-              />
-
               {/* 도시 마커 */}
               {citiesWeather.map((city) => (
-                <Button
+                <Box
                   key={city.city}
-                  onClick={() => handleCityClick(city)}
+                  onClick={() => setSelectedCity(city.city)}
                   sx={{
                     position: "absolute",
                     left: `${city.x}%`,
                     top: `${city.y}%`,
                     transform: "translate(-50%, -50%)",
-                    minWidth: "auto",
-                    padding: "8px 12px",
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    border: "2px solid #4CAF50",
-                    borderRadius: "8px",
-                    flexDirection: "column",
-                    gap: 0.5,
+                    backgroundColor: "rgba(50, 50, 50, 0.8)",
+                    color: "white",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
                     transition: "all 0.2s",
+                    border:
+                      selectedCity === city.city
+                        ? "2px solid white"
+                        : "1px solid rgba(255,255,255,0.3)",
                     "&:hover": {
+                      backgroundColor: "rgba(70, 70, 70, 0.9)",
                       transform: "translate(-50%, -50%) scale(1.1)",
-                      backgroundColor: "white",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-                      zIndex: 10,
                     },
                   }}
                 >
-                  <LocationOn sx={{ fontSize: 16, color: "#4CAF50" }} />
-                  <Typography
-                    sx={{
-                      fontSize: "10px",
-                      fontWeight: "bold",
-                      color: "#333",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {city.name}
-                  </Typography>
-                  {city.temperature !== undefined && (
-                    <Typography
-                      sx={{
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        color: "#FF6B35",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {city.temperature}°
-                    </Typography>
-                  )}
-                </Button>
+                  {city.name} {city.temperature}°
+                </Box>
               ))}
 
-              {/* 안내 텍스트 */}
-              {citiesWeather.length === 0 && !loading && (
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: "rgba(0,0,0,0.4)",
-                    textAlign: "center",
-                  }}
-                >
-                  날씨 정보를 불러오는 중...
+              {/* 범례 */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 20,
+                  right: 20,
+                  backgroundColor: "rgba(255,255,255,0.9)",
+                  p: 2,
+                  borderRadius: 2,
+                }}
+              >
+                <Typography variant="caption" sx={{ display: "block", mb: 1 }}>
+                  초미세먼지
                 </Typography>
-              )}
+                <Typography variant="caption" sx={{ display: "block", mb: 1 }}>
+                  미세먼지
+                </Typography>
+                <Typography variant="caption" sx={{ display: "block", mb: 1 }}>
+                  습도
+                </Typography>
+                <Typography variant="caption" sx={{ display: "block" }}>
+                  자외선
+                </Typography>
+              </Box>
             </Box>
           </Paper>
         </Box>
