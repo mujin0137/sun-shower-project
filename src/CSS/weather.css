@@ -1,6 +1,7 @@
 .weather {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: #a1a1a1;
+  border-radius: 10px;
 }
 
 .weather * {

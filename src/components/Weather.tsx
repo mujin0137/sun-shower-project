@@ -261,89 +261,170 @@ const Weather = () => {
         }}
       >
         {/* 왼쪽 영역 - 상세 정보 */}
-        <Box sx={{ flex: { xs: 1, lg: 1 }, minWidth: 0 }}>
-          {/* 도시 선택 & 현재 날씨 */}
+        <Box sx={{ flex: { xs: 1, lg: 1 }, minWidth: 0, width:"25.7vw" }}>
+          {/* 상세 정보 박스 */}
           <Paper
             elevation={3}
             sx={{
               p: 3,
               mb: 2,
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              color: "white",
+              background: "#ffafafff",
+              color: "balck",
+              boxShadow: "none",
             }}
           >
-            <Select
-              value={selectedCity}
-              onChange={handleCityChange}
-              sx={{
-                mb: 2,
-                backgroundColor: "rgba(255,255,255,0.2)",
-                color: "white",
-                "& .MuiSelect-icon": { color: "white" },
-                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-              }}
-              fullWidth
-            >
-              {majorCities.map((city) => (
-                <MenuItem key={city.city} value={city.city}>
-                  {city.name}
-                </MenuItem>
-              ))}
-            </Select>
 
+            {/* 상단 오늘의 날씨 현황 */}
             {currentWeather && (
-              <Box>
-                <Typography variant="h2" sx={{ fontWeight: "bold", mb: 1 }}>
-                  {currentWeather.temperature.current}°
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
-                  습도 {currentWeather.details.humidity}%
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                  최고 {currentWeather.temperature.max}° / 최저{" "}
-                  {currentWeather.temperature.min}°
-                </Typography>
-              </Box>
+              <Paper
+                sx={{display: "flex", flexDirection:"row", gap:3, alignItems: "center", justifyContent:"space-between", }}
+                >
+                <Box
+                  sx={{display: "flex", flexDirection:"column", gap:1, alignItems:"center"}}
+                  >
+                    <Box
+                      sx={{display:"flex", flexDirection:"row"}}
+                      >
+                        {/* 오늘의 날씨 아이콘 */}
+                        <Box>
+                             <img
+                            src={currentWeather.weather.iconUrl}
+                            alt={currentWeather.weather.description}
+                            style={{ width: 130, height: 130, marginRight: 8 }}
+                               />
+                        </Box>
+
+                      <Box
+                        sx={{display: "flex", flexDirection:"column"}}
+                        >
+                          {/*도시 선택*/}
+                        <Select
+                          value={selectedCity}
+                          onChange={handleCityChange}
+                          sx={{
+                            color: "black",
+                            fontSize: "0.8rem",
+                            "& .MuiSelect-icon": { color: "Black", fontSize: "1rem"  },
+                            "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                          }}
+                          fullWidth
+                        >
+                          {majorCities.map((city) => (
+                            <MenuItem key={city.city} value={city.city}>
+                              {city.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <Typography variant="h2" sx={{ fontWeight: "bold", mb: 1, fontSize:"2rem", textAlign:"center" }}>
+                          {currentWeather.temperature.current}°
+                        </Typography>
+                        <Typography variant="body1" 
+                          sx={{ 
+                            mb: 2,
+                            opacity: 0.9,
+                            fontSize:"0.75rem"
+                            }}>
+                          습도 {currentWeather.details.humidity}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography
+                      sx={{
+                        backgroundColor:"#555396",
+                        color:"#ffffff",
+                        width:"8vw",
+                        height:"2vh",
+                        fontSize:"0.75rem",
+                        textAlign:"center",
+                        borderRadius:"20px" }}
+                      >
+                      대기정체에 주의하세요.
+                    </Typography>
+                     {/*최고/최저온도*/}
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    최고 {currentWeather.temperature.max}° / 최저{" "}
+                    {currentWeather.temperature.min}°
+                  </Typography>
+                </Box>
+
+                <Box 
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems:"center",
+                    justifyContent:"space-between" }}>
+                  {/* 초미세먼지*/}
+                  <Box
+                    sx={{ 
+                      flex: 1, 
+                      flexDirection: "column", 
+                      py: 1,
+                      textAlign:"center"
+                    }}
+                  >
+                    <Typography variant="caption">초미세먼지</Typography>
+                    <Box
+                    sx={{
+                      backgroundColor:"#FFBB4E",
+                      width:"2.5vw",
+                      color:"wi"
+                    }}
+                    >
+                    <Typography variant="body2" fontWeight="bold">
+                      보통
+                    </Typography>
+                    </Box>
+                  </Box>
+
+                  {/*미세먼지*/}
+                  <Box
+                    sx={{
+                      flex: 1,
+                      flexDirection: "column",
+                      py: 1,
+                      textAlign:"center",
+                      alignContent:"center"
+                    }}
+                  >
+                    <Typography variant="caption">미세먼지</Typography>
+                    <Box
+                    sx={{
+                      backgroundColor:"#63A465",
+                      width:"2.5vw",
+                      
+                    }}
+                    >
+                    <Typography variant="body2" fontWeight="bold">
+                      좋음
+                    </Typography>
+                    </Box>
+                  </Box>
+                  {/*자외선 */}
+                  <Box
+                    sx={{
+                      flex: 1,
+                      flexDirection: "column",
+                      py: 1,
+                      textAlign:"center",
+                      
+                    }}
+                  >
+                    <Typography variant="caption">자외선</Typography>
+                    <Box
+                      sx={{
+                        backgroundColor:"#FF7A00",
+                      width:"2.5vw"
+                      }}
+                    >
+                    <Typography variant="body2" fontWeight="bold">
+                      주의
+                    </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
             )}
-          </Paper>
-
-          {/* 초미세먼지/미세먼지/자외선 */}
-          <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{ flex: 1, flexDirection: "column", py: 1 }}
-              >
-                <Typography variant="caption">초미세먼지</Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  보통
-                </Typography>
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{ flex: 1, flexDirection: "column", py: 1 }}
-              >
-                <Typography variant="caption">미세먼지</Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  좋음
-                </Typography>
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{ flex: 1, flexDirection: "column", py: 1 }}
-              >
-                <Typography variant="caption">자외선</Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  높음
-                </Typography>
-              </Button>
-            </Box>
-          </Paper>
-
-          {/* 시간별 예보 */}
+            {/* 시간별 예보 */}
           <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
             <Box
               sx={{
@@ -382,10 +463,9 @@ const Weather = () => {
               })}
             </Box>
           </Paper>
-
-          {/* 주간 예보 */}
-          <Paper elevation={3} sx={{ p: 2 }}>
-            {dailyForecast.map((day, index) => (
+             
+               {/* 주간 예보 */}
+              {dailyForecast.map((day, index) => (
               <Box
                 key={index}
                 sx={{
@@ -426,6 +506,14 @@ const Weather = () => {
               </Box>
             ))}
           </Paper>
+
+          
+          
+
+          
+
+        
+      
         </Box>
 
         {/* 오른쪽 영역 - 지도 */}
