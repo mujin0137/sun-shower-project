@@ -252,7 +252,7 @@ const Weather = () => {
   }
 
   return (
-    <Box className="weather" sx={{ minHeight: "100vh", p: 3 }}>
+    <Box className="weather page" sx={{ minHeight: "100vh", p: 3 }}>
       <Box
         sx={{
           display: "flex",
@@ -293,9 +293,16 @@ const Weather = () => {
 
             {currentWeather && (
               <Box>
-                <Typography variant="h2" sx={{ fontWeight: "bold", mb: 1 }}>
-                  {currentWeather.temperature.current}°
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <img
+                    src={currentWeather.weather.iconUrl}
+                    alt={currentWeather.weather.description}
+                    style={{ width: 80, height: 80, marginRight: 8 }}
+                  />
+                  <Typography variant="h2" sx={{ fontWeight: "bold" }}>
+                    {currentWeather.temperature.current}°
+                  </Typography>
+                </Box>
                 <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
                   습도 {currentWeather.details.humidity}%
                 </Typography>

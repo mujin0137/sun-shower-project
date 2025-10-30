@@ -20,7 +20,7 @@ const Calendar = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box className="page" sx={{ width: "100%", backgroundColor: "#888888" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={getCurrentTab()} onChange={handleTabChange}>
           <Tab label="일간" value="/calendar/day" />

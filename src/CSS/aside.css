@@ -1,23 +1,157 @@
 /* Aside (사이드바) 스타일 */
 
-/* 반응형: 499px 이하에서 사이드바 숨김 */
-@media (max-width: 499px) {
-  .MuiDrawer-root {
-    display: none !important;
-  }
+.aside-drawer {
+  width: 208px;
+  height: 676px;
+  /* background-color: #888888; */
+  box-sizing: border-box;
+  margin-left: 80px;
+  border-radius: 10px;
+  position: relative;
+  top: 122px;
+  /* left: 20px; */
+  background: linear-gradient(to bottom, #ffffff 38%, #a3d8f4 76%);
+}
 
-  .MuiDrawer-paper {
+.aside-logo {
+  position: absolute;
+  top: -100px;
+  left: 45px;
+  cursor: pointer;
+}
+
+.aside-list {
+  position: absolute;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-size: 16px;
+  top: 43px;
+}
+
+.aside-list-item {
+  padding: 0;
+}
+
+.aside-list-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: left;
+}
+
+.aside-list-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.aside-list-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  color: #000;
+}
+
+.aside-list-text {
+  font-size: 30px;
+  font-family: Pretendard;
+  font-weight: bold;
+  color: #000;
+  font-size: 16px;
+}
+
+.aside-draw-box {
+  width: 142px;
+  height: 142px;
+  /* background-color: #444444; */
+  border-radius: 10px;
+  position: absolute;
+  bottom: 141px;
+  left: 33px;
+}
+
+/* 메인 페이지 심플 모드 */
+.aside-minimal {
+  width: 100px;
+  background: transparent !important;
+}
+
+.aside-minimal .aside-list-text {
+  display: none;
+}
+
+.aside-minimal .aside-draw-box {
+  display: none;
+}
+
+.aside-minimal .txt-rg-hello,
+.aside-minimal .txt-rg-email,
+.aside-minimal .txt-rg-logout {
+  display: none;
+}
+
+.aside-minimal .aside-list-button {
+  justify-content: center;
+  padding: 4px;
+  /* margin-left: -10px; */
+}
+
+.aside-minimal .aside-list-button:hover {
+  background-color: rgba(163, 216, 244, 0.2);
+  border-radius: 8px;
+}
+
+.aside-minimal .aside-list {
+  margin-top: -48px;
+}
+
+.aside-minimal .aside-list-icon {
+  width: 58px;
+  height: 62px;
+  /* background-color: red; */
+  /* margin-left: -150px; */
+}
+
+/* 반응형: 1280px 이하에서 사이드바 숨김 */
+@media (max-width: 1280px) {
+  .aside-drawer {
     display: none !important;
   }
 }
 
-/* 500px 이상에서 사이드바 표시 */
-@media (min-width: 500px) {
-  .MuiDrawer-root {
+/* 1281px 이상에서 사이드바 표시 */
+@media (min-width: 1281px) {
+  .aside-drawer {
     display: block !important;
   }
+}
 
-  .MuiDrawer-paper {
-    display: block !important;
-  }
+.txt-rg-hello {
+  font-size: 16px;
+  position: absolute;
+  bottom: 113px;
+  left: 21px;
+  color: #fff;
+}
+
+.txt-rg-email {
+  font-size: 16px;
+  position: absolute;
+  bottom: 93px;
+  left: 21px;
+  color: #fff;
+}
+
+.txt-rg-logout {
+  font-size: 12px;
+  color: #fff;
+  position: absolute;
+  bottom: 29px;
+  right: 21px;
 }

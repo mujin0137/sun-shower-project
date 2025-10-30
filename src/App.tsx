@@ -13,7 +13,7 @@ import Transportation from "./components/Transportation";
 function App() {
   return (
     <BrowserRouter>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", backgroundColor: "#f5f5f5" }}>
         <Aside />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Routes>

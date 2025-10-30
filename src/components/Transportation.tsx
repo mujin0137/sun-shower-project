@@ -276,7 +276,7 @@ const Transportation = () => {
 
   return (
     <Box
-      className="transportation"
+      className="transportation page"
       sx={{ maxWidth: 1400, margin: "0 auto", p: 3 }}
     >
       <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
