@@ -1,4 +1,125 @@
+/* Main Layout */
 .main {
-  color: aqua;
-  background-color: beige;
+  margin-top: 27px;
+  display: flex;
+}
+
+.main-right {
+  max-height: 468px;
+}
+
+.main-schedule-top {
+  width: 500px;
+  height: 227px;
+  background-color: red;
+  border-radius: 10px;
+}
+
+.main-left-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.main-reservation {
+  width: 200px;
+  height: 553px;
+  background-color: blue;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.main-checklist {
+  width: 200px;
+  height: 553px;
+  background-color: green;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.main-right-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.main-schedule-bottom {
+  width: 580px;
+  height: 212px;
+  background-color: yellow;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+/* Calendar Table 스타일 */
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Pretendard;
+  border: 0px;
+  height: 468px;
+
+  box-sizing: border-box;
+}
+
+.calendar-table thead th {
+  padding: 6px;
+  font-weight: 800;
+  background: #fafbfc;
+  /* border: 1px solid #d8d8dd; */
+}
+
+.calendar-table thead th:first-child {
+  color: #e14a4a; /* 일요일 */
+  border-top-left-radius: 10px;
+}
+
+.calendar-table thead th:last-child {
+  border-top-right-radius: 10px;
+  color: #5291e2; /* 토요일 */
+}
+
+.calendar-table tbody td {
+  text-align: center;
+  height: 44px;
+  color: #222;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ececec;
+  box-sizing: border-box;
+}
+
+.calendar-table tbody td:first-child {
+  border-left: 0px;
+}
+.calendar-table tbody td:last-child {
+  border-right: 0px;
+}
+.calendar-table tbody tr:last-child td {
+  border-bottom: 0px;
+}
+
+.calendar-table tbody td:first-child {
+  color: #e14a4a; /* 일요일 */
+}
+
+.calendar-table tbody td:last-child {
+  color: #5291e2; /* 토요일 */
+  /* border: 1px solid #ececec; */
+}
+
+/* 빈 셀 (다른 달 날짜) */
+.calendar-table tbody td:empty,
+.calendar-table tbody td:not(:has(*)) {
+  background-color: #fafbfc;
+  color: #b8bcc3;
+  font-weight: 400;
+  cursor: default;
+}
+
+.calendar-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 10px;
+}
+
+.calendar-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 10px 0;
 }
