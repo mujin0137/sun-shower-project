@@ -5,7 +5,7 @@ import {
   DirectionsBus,
   // Home,
 } from "@mui/icons-material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../CSS/aside.css";
 
 const Aside = () => {
@@ -20,15 +20,9 @@ const Aside = () => {
     navigate("/");
   };
 
-  const currentPath = useLocation();
-
   return (
     <>
-      <aside
-        className={`aside-drawer ${
-          currentPath.pathname === "/" ? "aside-minimal" : ""
-        }`}
-      >
+      <aside className="aside-drawer">
         <svg
           onClick={handleLogoClick}
           width="104"
@@ -57,6 +51,7 @@ const Aside = () => {
               <button
                 className="aside-list-button"
                 onClick={() => navigate(item.path)}
+                // style={{ width: "207px", height: "50px" }}
               >
                 <span className="aside-list-icon">{item.icon}</span>
                 <span className="aside-list-text">

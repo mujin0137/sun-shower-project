@@ -2,21 +2,19 @@
 
 .aside-drawer {
   width: 208px;
-  height: 676px;
-  /* background-color: #888888; */
+  height: 790px;
   box-sizing: border-box;
   margin-left: 80px;
   border-radius: 10px;
   position: relative;
-  top: 122px;
-  /* left: 20px; */
+  top: 50px;
   background: linear-gradient(to bottom, #ffffff 38%, #a3d8f4 76%);
 }
 
 .aside-logo {
   position: absolute;
-  top: -100px;
-  left: 45px;
+  top: 20px;
+  left: 50px;
   cursor: pointer;
 }
 
@@ -27,7 +25,7 @@
   margin: 0;
   width: 100%;
   font-size: 16px;
-  top: 43px;
+  top: 103px;
 }
 
 .aside-list-item {
@@ -44,6 +42,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   text-align: left;
+  height: 50px;
 }
 
 .aside-list-button:hover {
@@ -74,48 +73,6 @@
   position: absolute;
   bottom: 141px;
   left: 33px;
-}
-
-/* 메인 페이지 심플 모드 */
-.aside-minimal {
-  width: 100px;
-  background: transparent !important;
-}
-
-.aside-minimal .aside-list-text {
-  display: none;
-}
-
-.aside-minimal .aside-draw-box {
-  display: none;
-}
-
-.aside-minimal .txt-rg-hello,
-.aside-minimal .txt-rg-email,
-.aside-minimal .txt-rg-logout {
-  display: none;
-}
-
-.aside-minimal .aside-list-button {
-  justify-content: center;
-  padding: 4px;
-  /* margin-left: -10px; */
-}
-
-.aside-minimal .aside-list-button:hover {
-  background-color: rgba(163, 216, 244, 0.2);
-  border-radius: 8px;
-}
-
-.aside-minimal .aside-list {
-  margin-top: -48px;
-}
-
-.aside-minimal .aside-list-icon {
-  width: 58px;
-  height: 62px;
-  /* background-color: red; */
-  /* margin-left: -150px; */
 }
 
 /* 반응형: 1280px 이하에서 사이드바 숨김 */
