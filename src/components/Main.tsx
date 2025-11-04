@@ -1,4 +1,5 @@
 import React from "react";
+import { Box } from "@mui/material";
 import "../CSS/main.css";
 
 // 새로운 월간 캘린더 컴포넌트
@@ -58,7 +59,9 @@ function MonthlyCalendar({ year, month }: { year: number; month: number }) {
     <div className="monthly-calendar">
       {/* 상단: 월 타이틀 + 네비게이션 */}
       <div className="calendar-title-bar">
-        <h2 className="calendar-month-title">{month} OCT</h2>
+        <h2 className="calendar-month-title">
+          {month} {year}
+        </h2>
         <div className="calendar-nav">
           <button className="nav-btn prev">&lt;</button>
           <button className="nav-btn next">&gt;</button>
@@ -102,21 +105,97 @@ function MonthlyCalendar({ year, month }: { year: number; month: number }) {
 
 const Main = () => {
   return (
-    <section className="main page">
-      <div className="main-left">
-        <div className="main-schedule-top">123123</div>
-        <div className="main-left-wrap">
-          <div className="main-reservation">456546</div>
-          <div className="main-checklist">789789</div>
-        </div>
-      </div>
-      <div className="main-right">
-        {/* <div className="main-right-wrap"> */}
-        <MonthlyCalendar year={2025} month={3} />
-        <div className="main-schedule-bottom"></div>
-        {/* </div> */}
-      </div>
-    </section>
+    <Box
+      className="page"
+      sx={{
+        mt: { xs: "15px", md: "20px", lg: "27px" },
+        display: "flex",
+        gap: { xs: "10px", md: "15px", lg: "27px" },
+        overflow: "hidden",
+        width: "100%",
+        maxHeight: {
+          xs: "calc(100vh - 80px)",
+          md: "calc(100vh - 100px)",
+          lg: "auto",
+        },
+      }}
+    >
+      {/* 왼쪽 영역 - 30% */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: { xs: "8px", md: "10px" },
+          flex: { xs: "1", md: "0 0 30%" },
+          minWidth: 0,
+        }}
+      >
+        {/* 상단 스케줄 */}
+        <Box
+          sx={{
+            width: "100%",
+            height: { xs: "150px", md: "23%", lg: "227px" },
+            backgroundColor: "red",
+            borderRadius: "10px",
+          }}
+        >
+          123123
+        </Box>
+        {/* 예약/체크리스트 */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: { xs: "8px", md: "10px", lg: "20px" },
+            flex: 1,
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              backgroundColor: "blue",
+              borderRadius: "10px",
+            }}
+          >
+            456546
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              backgroundColor: "green",
+              borderRadius: "10px",
+            }}
+          >
+            789789
+          </Box>
+        </Box>
+      </Box>
+
+      {/* 오른쪽 영역 - 70% */}
+      <Box
+        sx={{
+          display: { xs: "none", md: "flex" },
+          flexDirection: "column",
+          gap: { xs: "8px", md: "10px" },
+          flex: { md: "0 0 65%" },
+          minWidth: 0,
+        }}
+      >
+        <Box sx={{ flex: 1, minHeight: "655px", minWidth: "100%" }}>
+          <MonthlyCalendar year={2025} month={11} />
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            height: { xs: "85px", md: "105px", lg: "127px" },
+            backgroundColor: "yellow",
+            borderRadius: "10px",
+          }}
+        >
+          5928123213
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

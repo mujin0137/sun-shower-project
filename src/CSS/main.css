@@ -2,6 +2,7 @@
 .main {
   margin-top: 27px;
   display: flex;
+  width: 100%;
   /* margin-right: 0; */
 }
 
@@ -9,6 +10,7 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  width: 70%;
 }
 
 .main-left {
@@ -26,6 +28,7 @@
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
+  width: 30%;
 }
 
 .main-reservation {
@@ -59,15 +62,31 @@
 
 /* Monthly Calendar 스타일 */
 .monthly-calendar {
-  width: 700px;
-  height: 655px;
+  width: 100%;
+  height: auto;
   background: #fff;
   font-family: Pretendard, -apple-system, sans-serif;
-  /* padding: 20px 30px 30px 30px; */
   box-sizing: border-box;
   border-radius: 10px;
   overflow: hidden;
-  /* background-color: #000000; */
+}
+
+@media (min-width: 0px) and (max-width: 959px) {
+  .monthly-calendar {
+    max-height: 525px;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .monthly-calendar {
+    max-height: 600px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .monthly-calendar {
+    max-height: 655px;
+  }
 }
 
 /* 상단: 타이틀 바 */
@@ -84,6 +103,18 @@
   color: #000000;
   margin: 0;
   letter-spacing: 0.5px;
+}
+
+@media (min-width: 0px) and (max-width: 959px) {
+  .calendar-month-title {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .calendar-month-title {
+    font-size: 28px;
+  }
 }
 
 .calendar-nav {
@@ -140,9 +171,21 @@
   padding: 8px;
   border-right: 1px solid #000000;
   border-bottom: 1px solid #000000;
-  /* border-left: 1px solid #000000; */
   background: #ffffff;
-  /* position: relative; */
+}
+
+@media (min-width: 0px) and (max-width: 959px) {
+  .calendar-cell {
+    min-height: 62px;
+    padding: 5px;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .calendar-cell {
+    min-height: 70px;
+    padding: 6px;
+  }
 }
 
 /* 마지막 주의 셀들은 border-bottom 제거 */
@@ -163,6 +206,18 @@
   text-align: left;
 }
 
+@media (min-width: 0px) and (max-width: 959px) {
+  .date-number {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .date-number {
+    font-size: 13px;
+  }
+}
+
 .calendar-week:last-child .calendar-cell:first-child {
   /* border-bottom-left-radius: 10px; */
 }
@@ -181,8 +236,7 @@
   color: #d0d0d0;
 }
 
-/* 반응형: 1280px 이하 */
-@media (max-width: 1280px) {
+/* 반응형: 1280px 이하 @media (max-width: 1000px) {
   .main {
     flex-direction: column;
   }
@@ -215,4 +269,4 @@
   .main-right {
     display: none;
   }
-}
+} */
