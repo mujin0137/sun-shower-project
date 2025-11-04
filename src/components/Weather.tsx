@@ -88,11 +88,11 @@ interface DailyForecast {
   pop: number;
 }
 
-const theme = createTheme({
-  typography: {
-    fontFamily: "'Pretendard', 'RomanticGumi', sans-serif",
-  },
-});
+// const theme = createTheme({
+//   typography: {
+//     fontFamily: "'Pretendard', 'RomanticGumi', sans-serif",
+//   },
+// });
 
 const Weather = () => {
   const [loading, setLoading] = useState(true);
