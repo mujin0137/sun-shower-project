@@ -79,8 +79,9 @@
 }
 
 .weather {
-  min-height: 1vh;
-  background: #ffffff;
+  min-height: 100vh;
+  background: #a1a1a1;
+
   border-radius: 10px;
 }
 
