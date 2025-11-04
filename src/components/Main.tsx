@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/material";
 import "../CSS/main.css";
 
 // 새로운 월간 캘린더 컴포넌트
-function MonthlyCalendar({ year, month }: { year: number; month: number }) {
+function MonthlyCalendar({
+  onWeeksChange,
+}: {
+  onWeeksChange?: (weeks: number) => void;
+}) {
+  // 현재 날짜를 기본값으로 설정
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1; // 0-11을 1-12로 변환
+
+  // 이전 달로 이동
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(year, month - 2, 1));
+  };
+
+  // 다음 달로 이동
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(year, month, 1));
+  };
   // 현재 달의 첫 날과 마지막 날
   const firstDay = new Date(year, month - 1, 1).getDay(); // 0(일) ~ 6(토)
   const lastDate = new Date(year, month, 0).getDate(); // 현재 달의 마지막 날짜
@@ -55,16 +74,43 @@ function MonthlyCalendar({ year, month }: { year: number; month: number }) {
     weeks.push(calendarDays.slice(i * 7, (i + 1) * 7));
   }
 
+  // 주 수를 부모 컴포넌트에 전달
+  React.useEffect(() => {
+    if (onWeeksChange) {
+      onWeeksChange(weekCount);
+    }
+  }, [weekCount, onWeeksChange]);
+
+  // 월 이름 배열
+  const monthNames = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+  ];
+
   return (
     <div className="monthly-calendar">
       {/* 상단: 월 타이틀 + 네비게이션 */}
       <div className="calendar-title-bar">
         <h2 className="calendar-month-title">
-          {month} {year}
+          &nbsp; {monthNames[month - 1]} / {year}
         </h2>
         <div className="calendar-nav">
-          <button className="nav-btn prev">&lt;</button>
-          <button className="nav-btn next">&gt;</button>
+          <button className="nav-btn prev" onClick={handlePrevMonth}>
+            &lt;
+          </button>
+          <button className="nav-btn next" onClick={handleNextMonth}>
+            &gt;
+          </button>
         </div>
       </div>
 
@@ -104,6 +150,8 @@ function MonthlyCalendar({ year, month }: { year: number; month: number }) {
 }
 
 const Main = () => {
+  const [calendarWeeks, setCalendarWeeks] = useState(6);
+
   return (
     <Box
       className="page"
@@ -179,17 +227,31 @@ const Main = () => {
           gap: { xs: "8px", md: "10px" },
           flex: { md: "0 0 65%" },
           minWidth: 0,
+          position: "relative",
         }}
       >
-        <Box sx={{ flex: 1, minHeight: "655px", minWidth: "100%" }}>
-          <MonthlyCalendar year={2025} month={11} />
+        <Box
+          sx={{
+            height:
+              calendarWeeks === 5
+                ? { md: "565px", lg: "565px" }
+                : { md: "655px", lg: "655px" },
+            minWidth: "100%",
+            transition: "height 0.2s ease",
+          }}
+        >
+          <MonthlyCalendar onWeeksChange={setCalendarWeeks} />
         </Box>
         <Box
           sx={{
             width: "100%",
-            height: { xs: "85px", md: "105px", lg: "127px" },
+            height:
+              calendarWeeks === 5
+                ? { md: "185px", lg: "215px" }
+                : { md: "105px", lg: "127px" },
             backgroundColor: "yellow",
             borderRadius: "10px",
+            transition: "height 0.2s ease",
           }}
         >
           5928123213
