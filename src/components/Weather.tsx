@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { ReactComponent as MyIcon } from "../images/weatherMap.svg";
 import {
   Box,
   Typography,
@@ -9,6 +10,7 @@ import {
   Select,
   SelectChangeEvent,
   createTheme,
+  ThemeProvider,
   IconButton,
   SwipeableDrawer,
   useMediaQuery,
@@ -88,11 +90,11 @@ interface DailyForecast {
   pop: number;
 }
 
-// const theme = createTheme({
-//   typography: {
-//     fontFamily: "'Pretendard', 'RomanticGumi', sans-serif",
-//   },
-// });
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Pretendard', 'RomanticGumi', sans-serif",
+  },
+});
 
 const Weather = () => {
   const [loading, setLoading] = useState(true);
@@ -339,7 +341,7 @@ const Weather = () => {
                     p: 3,
                     mb: 2,
                     background: "transparent",
-                    color: "black",
+                    color: "balck",
                     boxShadow: "none",
                     display: "flex",
                     flexDirection: "column",
