@@ -2,14 +2,21 @@
 .main {
   margin-top: 27px;
   display: flex;
+  /* margin-right: 0; */
 }
 
 .main-right {
-  max-height: 468px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.main-left {
+  margin-right: 27px;
 }
 
 .main-schedule-top {
-  width: 500px;
+  width: 620px;
   height: 227px;
   background-color: red;
   border-radius: 10px;
@@ -22,7 +29,7 @@
 }
 
 .main-reservation {
-  width: 200px;
+  width: 300px;
   height: 553px;
   background-color: blue;
   border-radius: 10px;
@@ -30,96 +37,182 @@
 }
 
 .main-checklist {
-  width: 200px;
+  width: 300px;
   height: 553px;
   background-color: green;
   border-radius: 10px;
-  margin-right: 20px;
+  /* margin-right: 20px; */
 }
 
-.main-right-wrap {
+/* .main-right-wrap {
   display: flex;
   flex-wrap: wrap;
-}
+} */
 
 .main-schedule-bottom {
-  width: 580px;
-  height: 212px;
+  width: 700px;
+  height: 127px;
   background-color: yellow;
   border-radius: 10px;
   margin-top: 10px;
 }
 
-/* Calendar Table 스타일 */
-.calendar-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: Pretendard;
-  border: 0px;
-  height: 468px;
-
+/* Monthly Calendar 스타일 */
+.monthly-calendar {
+  width: 700px;
+  height: 655px;
+  background: #fff;
+  font-family: Pretendard, -apple-system, sans-serif;
+  /* padding: 20px 30px 30px 30px; */
   box-sizing: border-box;
+  border-radius: 10px;
+  overflow: hidden;
+  /* background-color: #000000; */
 }
 
-.calendar-table thead th {
-  padding: 6px;
-  font-weight: 800;
-  background: #fafbfc;
-  /* border: 1px solid #d8d8dd; */
+/* 상단: 타이틀 바 */
+.calendar-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.calendar-table thead th:first-child {
-  color: #e14a4a; /* 일요일 */
-  border-top-left-radius: 10px;
+.calendar-month-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
-.calendar-table thead th:last-child {
-  border-top-right-radius: 10px;
-  color: #5291e2; /* 토요일 */
+.calendar-nav {
+  display: flex;
+  gap: 15px;
 }
 
-.calendar-table tbody td {
-  text-align: center;
-  height: 44px;
-  color: #222;
-  font-weight: 500;
+.nav-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  font-weight: 300;
+  color: #000000;
   cursor: pointer;
-  border: 1px solid #ececec;
-  box-sizing: border-box;
+  padding: 5px 10px;
+  transition: opacity 0.2s;
 }
 
-.calendar-table tbody td:first-child {
-  border-left: 0px;
-}
-.calendar-table tbody td:last-child {
-  border-right: 0px;
-}
-.calendar-table tbody tr:last-child td {
-  border-bottom: 0px;
+.nav-btn:hover {
+  opacity: 0.6;
 }
 
-.calendar-table tbody td:first-child {
-  color: #e14a4a; /* 일요일 */
+/* 헤더: 요일 */
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #fff;
+  /* border-top: 1px solid #000000; */
+  /* border-left: 1px solid #000000; */
 }
 
-.calendar-table tbody td:last-child {
-  color: #5291e2; /* 토요일 */
-  /* border: 1px solid #ececec; */
-}
-
-/* 빈 셀 (다른 달 날짜) */
-.calendar-table tbody td:empty,
-.calendar-table tbody td:not(:has(*)) {
-  background-color: #fafbfc;
-  color: #b8bcc3;
+.calendar-day-label {
+  padding: 12px 0;
+  text-align: center;
   font-weight: 400;
-  cursor: default;
+  font-size: 13px;
+  color: #000000;
+  /* border-right: 1px solid #000000; */
+  /* border-bottom: 1px solid #000000; */
 }
 
-.calendar-table tbody tr:last-child td:first-child {
-  border-radius: 0 0 0 10px;
+/* 본문: 날짜 */
+.calendar-body {
+  /* border-left: 1px solid #000000; */
 }
 
-.calendar-table tbody tr:last-child td:last-child {
-  border-radius: 0 0 10px 0;
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-cell {
+  min-height: 78px;
+  padding: 8px;
+  border-right: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  /* border-left: 1px solid #000000; */
+  background: #ffffff;
+  /* position: relative; */
+}
+
+/* 마지막 주의 셀들은 border-bottom 제거 */
+.calendar-week:last-child .calendar-cell {
+  border-bottom: none;
+}
+
+/* 각 주의 마지막 셀(토요일)은 border-right 제거 */
+.calendar-cell:last-child {
+  border-right: none;
+}
+
+.date-number {
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  color: #000000;
+  text-align: left;
+}
+
+.calendar-week:last-child .calendar-cell:first-child {
+  /* border-bottom-left-radius: 10px; */
+}
+
+/* 오른쪽 하단 모서리 (마지막 주의 마지막 셀 = 토요일) */
+.calendar-week:last-child .calendar-cell:last-child {
+  /* border-bottom-right-radius: 10px; */
+}
+
+/* 이전/다음 달 날짜 (회색) */
+.calendar-cell.other-month {
+  /* background: #fafafa; */
+}
+
+.calendar-cell.other-month .date-number {
+  color: #d0d0d0;
+}
+
+/* 반응형: 1280px 이하 */
+@media (max-width: 1280px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .main-left {
+    margin-right: 0;
+    order: 1;
+  }
+
+  .main-schedule-top {
+    order: 1;
+  }
+
+  .main-left-wrap {
+    flex-direction: column;
+    margin-top: 10px;
+    order: 2;
+  }
+
+  .main-reservation {
+    margin-right: 0;
+    margin-bottom: 10px;
+    order: 1;
+  }
+
+  .main-checklist {
+    order: 2;
+  }
+
+  .main-right {
+    display: none;
+  }
 }

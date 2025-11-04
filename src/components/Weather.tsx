@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ReactComponent as MyIcon } from "../images/weatherMap.svg";
 import {
   Box,
   Typography,
@@ -10,7 +9,6 @@ import {
   Select,
   SelectChangeEvent,
   createTheme,
-  ThemeProvider,
   IconButton,
   SwipeableDrawer,
   useMediaQuery,
@@ -341,7 +339,7 @@ const Weather = () => {
                     p: 3,
                     mb: 2,
                     background: "transparent",
-                    color: "balck",
+                    color: "black",
                     boxShadow: "none",
                     display: "flex",
                     flexDirection: "column",
