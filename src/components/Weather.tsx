@@ -132,7 +132,7 @@ const Weather = () => {
     const fetchCitiesWeather = async () => {
       try {
         const promises = majorCities.map((city) =>
-          fetch(`http://localhost:5000/api/weather/current?city=${city.city}`)
+          fetch(`http://localhost:5001/api/weather/current?city=${city.city}`)
             .then((res) => res.json())
             .then((data) => ({
               ...city,
@@ -170,14 +170,14 @@ const Weather = () => {
 
         // 현재 날씨
         const currentRes = await fetch(
-          `http://localhost:5000/api/weather/current?city=${selectedCity}`
+          `http://localhost:5001/api/weather/current?city=${selectedCity}`
         );
         const currentData = await currentRes.json();
         setCurrentWeather(currentData);
 
         // 예보
         const forecastRes = await fetch(
-          `http://localhost:5000/api/weather/forecast?city=${selectedCity}`
+          `http://localhost:5001/api/weather/forecast?city=${selectedCity}`
         );
         const forecastData = await forecastRes.json();
 
@@ -276,13 +276,13 @@ const Weather = () => {
       sx={{
         backgroundColor: { xs: "transparent", lg: "#ff7979ff" },
         flexGrow: 1,
-        width:"100%",
-        boxSizing:"border-box",
-        display:"flex",
-        flexDirection:"row",
-        justifyContent:"space-between",
-        alignContent:"center",
-        position:"relative"
+        width: "100%",
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignContent: "center",
+        position: "relative",
       }}
     >
       <Box
@@ -290,7 +290,7 @@ const Weather = () => {
           display: "flex",
           gap: 3,
           flexDirection: { xs: "column-reverse", lg: "row" },
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         {/* 왼쪽 영역 - 상세 정보 */}
@@ -355,7 +355,7 @@ const Weather = () => {
                   }}
                 >
                   {/* 상단 오늘의 날씨 현황 */}
-                  {currentWeather && (
+                  {currentWeather && currentWeather.weather && (
                     <Paper
                       sx={{
                         display: "flex",
@@ -700,8 +700,7 @@ const Weather = () => {
                               display: "flex",
                               flexDirection: "column",
                               justifyContent: "space-between",
-                              gap:1
-                          
+                              gap: 1,
                             }}
                           >
                             <Box
@@ -812,16 +811,16 @@ const Weather = () => {
               minWidth: 0,
               width: "100%",
               backgroundColor: "#682b2bff",
-              alignItems:"center",
-              alignContent:"center",
+              alignItems: "center",
+              alignContent: "center",
               borderRadius: "10px",
-              justifyContent:"space-between",
+              justifyContent: "space-between",
               boxShadow: { xs: "0px -4px 4px rgba(0, 0, 0, 0.25)", lg: "none" },
-              px:4,
+              px: 4,
             }}
           >
             {/* 상단 오늘의 날씨 현황 */}
-            {currentWeather && (
+            {currentWeather && currentWeather.weather && (
               <Paper
                 sx={{
                   display: "flex",
@@ -1261,11 +1260,12 @@ const Weather = () => {
         )}
 
         {/* 오른쪽 영역 - 지도 */}
-        <Box 
-          sx={{ 
-          width:"100%",
-          background:"gray"
-              }}>
+        <Box
+          sx={{
+            width: "100%",
+            background: "gray",
+          }}
+        >
           <Paper
             elevation={3}
             sx={{
@@ -1977,7 +1977,7 @@ const Weather = () => {
               <Box
                 sx={{
                   position: "absolute",
-                  bottom:0,
+                  bottom: 0,
                   right: 0,
                   p: 1,
                   rowGap: 1,

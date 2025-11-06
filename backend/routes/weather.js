@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const weatherService = require("../services/weatherService");
 const SearchHistory = require("../models/SearchHistory");
+const mongoose = require("mongoose");
 
 // 현재 날씨 조회
 router.get("/current", async (req, res) => {
@@ -20,7 +21,9 @@ router.get("/current", async (req, res) => {
       city,
     });
 
-    // 검색 기록 저장
+    // 검색 기록 저장 (MongoDB 연결되어 있을 때만)
+    if (mongoose.connection.readyState === 1) {
+      try {
     await SearchHistory.create({
       type: "weather",
       location: {
@@ -31,6 +34,10 @@ router.get("/current", async (req, res) => {
         },
       },
     });
+      } catch (dbError) {
+        console.log("⚠️  검색 기록 저장 실패 (무시됨):", dbError.message);
+      }
+    }
 
     res.json(weatherData);
   } catch (error) {

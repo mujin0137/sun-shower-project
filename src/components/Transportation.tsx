@@ -191,7 +191,7 @@ const Transportation = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/transportation/directions?origin=${encodeURIComponent(
+        `http://localhost:5001/api/transportation/directions?origin=${encodeURIComponent(
           origin
         )}&destination=${encodeURIComponent(
           destination
@@ -256,13 +256,16 @@ const Transportation = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Box className="transportation" sx={{ 
-      width: "100%",
-      maxWidth: 1800, 
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <Box
+      className="transportation"
+      sx={{
+        width: "100%",
+        maxWidth: 1800,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Typography variant="h4" sx={{ fontWeight: "bold" }}></Typography>
 
       <Box
@@ -335,11 +338,16 @@ const Transportation = () => {
                 elevation={3}
                 sx={{
                   height: { xs: "80vh", md: "790px" },
-                  p: 4.3,
                   transition: "padding 0.4s ease",
+                  overflow: "auto",
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                  scrollbarWidth: "none", // Firefox
+                  msOverflowStyle: "none", // IE and Edge
                 }}
               >
-                <Stack spacing={2}>
+                <Stack spacing={2} sx={{ p: 4.3 }}>
                   {/* 교통수단 탭 */}
                   <Box
                     sx={{
