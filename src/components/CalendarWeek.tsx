@@ -1,12 +1,20 @@
 import React, { useRef } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const CalendarWeek = () => {
-  const hourWidth = 80;
-  const rowHeight = 90;
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
+
+  // ✅ 반응형 구분
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const isTablet = useMediaQuery("(max-width:1024px)");
+
+  // ✅ 반응형 크기
+  const hourWidth = isMobile ? 45 : isTablet ? 60 : 80;
+  const rowHeight = isMobile ? 110 : isTablet ? 80 : 90;
+  const hourCount = 24;
 
   const days = [
     "일요일",
@@ -29,6 +37,7 @@ const CalendarWeek = () => {
     return date;
   });
 
+  // ✅ 스크롤 동기화
   const handleScroll = () => {
     if (scrollRef.current && headerRef.current) {
       headerRef.current.scrollLeft = scrollRef.current.scrollLeft;
@@ -40,14 +49,17 @@ const CalendarWeek = () => {
       sx={{
         position: "relative",
         width: "100%",
-        borderRadius: { xs: 0, lg: 2 },
+        maxWidth: {xs:"450px", lg:"1430px"},
+        borderRadius: 2,
         backgroundColor: "white",
         display: "flex",
         flexDirection: "column",
-        paddingTop: "6.2%",
+        paddingTop: isMobile ? "5%" : "3%",
         boxSizing: "border-box",
-        overflow: "hidden",
-        left: { xs: -50, lg: 0 },
+        margin: "0 auto",
+        overflowX: "hidden", // ✅ 외부 가로 스크롤 완전 차단
+        overflowY:"hidden",
+        
       }}
     >
       {/* ✅ 시간 헤더 */}
@@ -56,15 +68,21 @@ const CalendarWeek = () => {
         sx={{
           position: "sticky",
           top: 0,
-          left: "60px",
-          overflow: "hidden",
-          zIndex: 5,
+          left: 0,
+          zIndex: 2,
           backgroundColor: "#fff",
-          ml: "6.1%",
+          pl: "70px", // 요일 열 너비만큼
+          overflow: "hidden",
         }}
       >
-        <Box sx={{ display: "flex", width: `${24 * hourWidth}px` }}>
-          {Array.from({ length: 24 }, (_, hour) => (
+        <Box
+          sx={{
+            display: "flex",
+            width: `${hourCount * hourWidth}px`,
+            transition: "width 0.2s ease",
+          }}
+        >
+          {Array.from({ length: hourCount }, (_, hour) => (
             <Box
               key={hour}
               sx={{
@@ -76,8 +94,8 @@ const CalendarWeek = () => {
               <Typography
                 variant="caption"
                 color="text.secondary"
-                fontFamily={"Pretendard"}
-                fontSize={12}
+                fontFamily="Pretendard"
+                fontSize={isMobile ? 11 : 12}
               >
                 {hour}:00
               </Typography>
@@ -85,6 +103,19 @@ const CalendarWeek = () => {
           ))}
         </Box>
       </Box>
+
+      {/* ✅ 교차 덮개 */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 40,
+          left: 0,
+          width: "70px",
+          height: "28px",
+          backgroundColor: "#fff",
+          zIndex: 3,
+        }}
+      />
 
       {/* ✅ 본문 */}
       <Box
@@ -94,17 +125,21 @@ const CalendarWeek = () => {
           position: "relative",
           fontFamily: "Pretendard",
           fontSize: 12,
+          overflow: "hidden", // ✅ 부모는 절대 스크롤 안 생김
         }}
       >
-        {/* 요일 고정 열 */}
+        {/* ✅ 요일 고정 열 */}
         <Box
           sx={{
             position: "sticky",
-            width: "60px",
+            left: 0,
+            top: 0,
+            width: isMobile ? "75px" : "70px",
             zIndex: 4,
-            px: 2,
-            borderRight: "1px solid #999",
+            px: isMobile ? 1.5 : 2,
+            borderRight: "1px solid #ccc",
             backgroundColor: "#fff",
+            flexShrink: 0,
           }}
         >
           {weekDates.map((date, di) => {
@@ -126,10 +161,10 @@ const CalendarWeek = () => {
                   color: isToday ? "#1976d2" : "#333",
                 }}
               >
-                <Typography fontFamily={"Pretendard"} fontSize={12}>
+                <Typography fontSize={isMobile ? 13 : 12} fontWeight={600}>
                   {days[di]}
                 </Typography>
-                <Typography variant="caption">
+                <Typography variant="caption" fontSize={isMobile ? 11 : 10}>
                   {`${date.getMonth() + 1}월 ${date.getDate()}일`}
                 </Typography>
               </Box>
@@ -137,13 +172,13 @@ const CalendarWeek = () => {
           })}
         </Box>
 
-        {/* ✅ 시간 칸 */}
+        {/* ✅ 시간 칸 (내부만 스크롤 가능) */}
         <Box
           ref={scrollRef}
           onScroll={handleScroll}
           sx={{
             flex: 1,
-            overflowX: "auto",
+            overflowX: "auto", // ✅ 내부에서만 스크롤
             overflowY: "hidden",
             scrollBehavior: "smooth",
             position: "relative",
@@ -152,14 +187,21 @@ const CalendarWeek = () => {
             "&::-webkit-scrollbar": { display: "none" },
           }}
         >
-          <Box sx={{ width: `${24 * hourWidth}px`, position: "relative" }}>
+          <Box
+            sx={{
+              width: `${hourCount * hourWidth}px`,
+              position: "relative",
+              transition: "width 0.2s ease",
+              zIndex: 1,
+            }}
+          >
             {/* ✅ 세로 구분선 */}
-            {Array.from({ length: 24 }, (_, i) => (
+            {Array.from({ length: hourCount }, (_, i) => (
               <Box
                 key={`vline-${i}`}
                 sx={{
                   position: "absolute",
-                  left: `${i * hourWidth + hourWidth / 2}px`,
+                  left: `${i * hourWidth}px`,
                   top: 0,
                   bottom: 0,
                   borderLeft: "1px dashed rgba(0,0,0,0.15)",
@@ -180,7 +222,7 @@ const CalendarWeek = () => {
                     di === days.length - 1 ? "none" : "1px dashed #ccc",
                 }}
               >
-                {Array.from({ length: 24 }, (_, hour) => (
+                {Array.from({ length: hourCount }, (_, hour) => (
                   <Box
                     key={hour}
                     sx={{
@@ -195,17 +237,16 @@ const CalendarWeek = () => {
         </Box>
       </Box>
 
-      {/* ✅ 파란 그라데이션 (화면 전체 세로 덮기, 요일칸 제외) */}
+      {/* ✅ 양쪽 그라데이션 */}
       <Box
         sx={{
           position: "absolute",
-
-          bottom: 0,
-          left: "5.5%", // 요일칸 끝부터 시작
-          width: "70px",
-          height: "88%",
+          top: isMobile ? "4%" : "3%",
+          left: isMobile ? "75px" : "70px",
+          width: "50px",
+          height: "97%",
           background:
-            "linear-gradient(to right, rgba(255, 255, 255, 0.7), transparent)",
+            "linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent)",
           pointerEvents: "none",
           zIndex: 10,
         }}
@@ -213,12 +254,12 @@ const CalendarWeek = () => {
       <Box
         sx={{
           position: "absolute",
-          bottom: 0,
+          top: isMobile ? "4%" : "3%",
           right: 0,
-          width: "70px",
-          height: "88%",
+          width: "50px",
+          height: "97%",
           background:
-            "linear-gradient(to left, rgba(255, 255, 255, 0.7), transparent)",
+            "linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent)",
           pointerEvents: "none",
           zIndex: 10,
         }}

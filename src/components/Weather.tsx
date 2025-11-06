@@ -132,7 +132,7 @@ const Weather = () => {
     const fetchCitiesWeather = async () => {
       try {
         const promises = majorCities.map((city) =>
-          fetch(`http://localhost:5001/api/weather/current?city=${city.city}`)
+          fetch(`http://localhost:5000/api/weather/current?city=${city.city}`)
             .then((res) => res.json())
             .then((data) => ({
               ...city,
@@ -170,14 +170,14 @@ const Weather = () => {
 
         // 현재 날씨
         const currentRes = await fetch(
-          `http://localhost:5001/api/weather/current?city=${selectedCity}`
+          `http://localhost:5000/api/weather/current?city=${selectedCity}`
         );
         const currentData = await currentRes.json();
         setCurrentWeather(currentData);
 
         // 예보
         const forecastRes = await fetch(
-          `http://localhost:5001/api/weather/forecast?city=${selectedCity}`
+          `http://localhost:5000/api/weather/forecast?city=${selectedCity}`
         );
         const forecastData = await forecastRes.json();
 
@@ -274,9 +274,15 @@ const Weather = () => {
     <Box
       className="weather"
       sx={{
-        minHeight: "600px",
-        mt: "25px",
-        backgroundColor: { xs: "transparent", lg: "#fff" },
+        backgroundColor: { xs: "transparent", lg: "#ff7979ff" },
+        flexGrow: 1,
+        width:"100%",
+        boxSizing:"border-box",
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignContent:"center",
+        position:"relative"
       }}
     >
       <Box
@@ -284,7 +290,7 @@ const Weather = () => {
           display: "flex",
           gap: 3,
           flexDirection: { xs: "column-reverse", lg: "row" },
-          padding: "2.8% 5%",
+          justifyContent: "space-between"
         }}
       >
         {/* 왼쪽 영역 - 상세 정보 */}
@@ -693,8 +699,9 @@ const Weather = () => {
                             sx={{
                               display: "flex",
                               flexDirection: "column",
-                              gap: 1,
                               justifyContent: "space-between",
+                              gap:1
+                          
                             }}
                           >
                             <Box
@@ -747,7 +754,7 @@ const Weather = () => {
                         alignItems: "center",
                         justifyContent: "space-between",
                         textAlign: "center",
-                        flexDirection: "",
+                        flexDirection: "column",
                         width: "100%",
                         p: 1,
                       }}
@@ -802,14 +809,15 @@ const Weather = () => {
           <Paper
             elevation={3}
             sx={{
-              flex: { xs: 1, lg: 1 },
               minWidth: 0,
               width: "100%",
-              backgroundColor: "#fff",
-              alignContent: "center",
+              backgroundColor: "#682b2bff",
+              alignItems:"center",
+              alignContent:"center",
               borderRadius: "10px",
+              justifyContent:"space-between",
               boxShadow: { xs: "0px -4px 4px rgba(0, 0, 0, 0.25)", lg: "none" },
-              padding: "0 30px",
+              px:4,
             }}
           >
             {/* 상단 오늘의 날씨 현황 */}
@@ -821,7 +829,7 @@ const Weather = () => {
                   gap: 3,
                   alignItems: "center",
                   justifyContent: "center",
-                  p: 5,
+                  scrollSnapPointsX: 5,
                   width: "100%",
                   backgroundColor: "transparent",
                   boxShadow: "none",
@@ -1253,7 +1261,11 @@ const Weather = () => {
         )}
 
         {/* 오른쪽 영역 - 지도 */}
-        <Box sx={{ flex: { xs: 1, lg: 2 } }}>
+        <Box 
+          sx={{ 
+          width:"100%",
+          background:"gray"
+              }}>
           <Paper
             elevation={3}
             sx={{
@@ -1965,8 +1977,8 @@ const Weather = () => {
               <Box
                 sx={{
                   position: "absolute",
-                  bottom: 20,
-                  right: 20,
+                  bottom:0,
+                  right: 0,
                   p: 1,
                   rowGap: 1,
                   display: "flex",

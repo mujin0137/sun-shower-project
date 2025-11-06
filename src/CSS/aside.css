@@ -1,23 +1,22 @@
 /* Aside (사이드바) 스타일 */
 
 .aside-drawer {
-  width: 208px;
+  width: 210px;
   height: 100%;
   box-sizing: border-box;
-  margin-left: 70px;
   border-radius: 10px;
   display: flex;
+  position: relative;
   flex-direction: column;
+  padding: 30px 0;
   /* padding: 20px 0 29px 0; */
   background: linear-gradient(to bottom, #ffffff 38%, #a3d8f4 76%);
-  margin-top: 50px;
   /* flex-wrap: wrap; */
 }
 
 .aside-logo {
   margin-left: 50px;
-  margin-bottom: 34px;
-  margin-top: 10px;
+  margin-bottom: 30px;
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -77,7 +76,9 @@
   margin-bottom: 20px;
   flex-shrink: 0;
 }
+.txt-rg-user{
 
+}
 .txt-rg-hello {
   font-size: 16px;
   margin-left: 21px;
