@@ -61,6 +61,7 @@ const Aside = () => {
             </li>
           ))}
         </ul>
+       <div className="txt-rg-user">
         <div className="aside-draw-box">
           <svg
             width="143"
@@ -158,9 +159,10 @@ const Aside = () => {
             </defs>
           </svg>
         </div>
-        <p className="txt-rg txt-rg-hello">안녕하세요,</p>
-        <p className="txt-rg txt-rg-email">사용자 이메일</p>
-        <p className="txt-rg txt-rg-logout">로그아웃</p>
+          <p className="txt-rg txt-rg-hello">안녕하세요,</p>
+          <p className="txt-rg txt-rg-email">사용자 이메일</p>
+          <p className="txt-rg txt-rg-logout">로그아웃</p>
+        </div>
       </aside>
     </>
   );

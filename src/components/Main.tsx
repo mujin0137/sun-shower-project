@@ -156,9 +156,8 @@ const Main = () => {
     <Box
       className="page"
       sx={{
-        mt: { xs: "15px", md: "20px", lg: "27px" },
         display: "flex",
-        gap: { xs: "10px", md: "15px", lg: "27px" },
+        gap: { xs: "10px", md: "15px", lg: "25px" },
         overflow: "hidden",
         width: "100%",
         maxHeight: {
@@ -166,6 +165,7 @@ const Main = () => {
           md: "calc(100vh - 100px)",
           lg: "auto",
         },
+        justifyContent:"space-between"
       }}
     >
       {/* 왼쪽 영역 - 30% */}
@@ -222,12 +222,11 @@ const Main = () => {
       {/* 오른쪽 영역 - 70% */}
       <Box
         sx={{
-          display: { xs: "none", md: "flex" },
+          display: { xs: "none", md: "flex",},
           flexDirection: "column",
           gap: { xs: "8px", md: "10px" },
-          flex: { md: "0 0 65%" },
+          flex: { md: "0 0 65%", lg:"0 0 68%"},
           minWidth: 0,
-          position: "relative",
         }}
       >
         <Box
@@ -240,7 +239,8 @@ const Main = () => {
             transition: "height 0.2s ease",
           }}
         >
-          <MonthlyCalendar onWeeksChange={setCalendarWeeks} />
+          <MonthlyCalendar onWeeksChange={setCalendarWeeks}
+          />
         </Box>
         <Box
           sx={{

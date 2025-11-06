@@ -13,9 +13,25 @@ import Transportation from "./components/Transportation";
 function App() {
   return (
     <BrowserRouter>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ 
+        width:"100%",
+        display: "flex",
+        position:"relative",
+        flexDirection:"row",
+        backgroundColor:"#F5F5F5",
+        alignContent:"center",
+        paddingY:{xs:0, lg:7.9},
+        paddingX:{xs:0, lg:10},
+        boxSizing:"border-box",
+        gap:3
+        }}>
         <Aside />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main"
+          sx={{ 
+            flexGrow: 1,
+            display:"flex",
+            alignContent:"center"
+            }}>
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/calendar" element={<Calendar />}>
