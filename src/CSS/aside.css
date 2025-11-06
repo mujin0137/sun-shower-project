@@ -9,13 +9,12 @@
   position: relative;
   flex-direction: column;
   padding: 30px 0;
-  /* padding: 20px 0 29px 0; */
+  align-items: center;
   background: linear-gradient(to bottom, #ffffff 38%, #a3d8f4 76%);
   /* flex-wrap: wrap; */
 }
 
 .aside-logo {
-  margin-left: 50px;
   margin-bottom: 30px;
   cursor: pointer;
   flex-shrink: 0;
@@ -28,12 +27,10 @@
   width: 100%;
   font-size: 16px;
   flex-shrink: 0;
-  padding-bottom: 279px;
+
+
 }
 
-.aside-list-item {
-  padding: 0;
-}
 
 .aside-list-button {
   width: 100%;
@@ -50,7 +47,9 @@
 
 .aside-list-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  color: #A3D8F4;
 }
+
 
 .aside-list-icon {
   display: flex;
@@ -62,36 +61,37 @@
 
 .aside-list-text {
   font-size: 30px;
-  font-family: Pretendard;
+  font-family: 'Pretendard';
   font-weight: bold;
   color: #000;
   font-size: 16px;
+}
+
+.aside-list:hover {
+  color: #A3D8F4;
 }
 
 .aside-draw-box {
   width: 142px;
   height: 142px;
   border-radius: 10px;
-  margin-left: 33px;
   margin-bottom: 20px;
   flex-shrink: 0;
 }
 .txt-rg-user{
+  background-color: pink;
 
 }
 .txt-rg-hello {
   font-size: 16px;
-  margin-left: 21px;
-  margin-bottom: 0;
+
   color: #fff;
   flex-shrink: 0;
 }
 
 .txt-rg-email {
   font-size: 16px;
-  margin-left: 21px;
-  margin-top: 0;
-  margin-bottom: 44px;
+
   color: #fff;
   flex-shrink: 0;
 }
@@ -99,9 +99,8 @@
 .txt-rg-logout {
   font-size: 12px;
   color: #fff;
-  margin-left: 141px;
-  margin-top: 0;
-  padding-bottom: 20px;
+
+
   flex-shrink: 0;
 }
 

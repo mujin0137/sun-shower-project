@@ -53,14 +53,16 @@ const Aside = () => {
                 onClick={() => navigate(item.path)}
                 // style={{ width: "207px", height: "50px" }}
               >
-                <span className="aside-list-icon">{item.icon}</span>
-                <span className="aside-list-text">
-                  &nbsp;&nbsp;&nbsp;{item.text}
-                </span>
+                <div className="aside-btnicon">
+                  {item.icon}
+                  {item.text}
+                </div>
               </button>
             </li>
           ))}
         </ul>
+        
+        {/* 유저 아이디 란 */}
        <div className="txt-rg-user">
         <div className="aside-draw-box">
           <svg
