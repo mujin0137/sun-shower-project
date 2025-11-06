@@ -50,17 +50,15 @@ const CalendarDay = () => {
   return (
     <Box
       sx={{
-        position: "absolute",
+        position: "relative",
         left: 0,
         width: "calc(100vw - 68px)",
-        maxWidth: 1500,
-        height: "78vh",
+        maxWidth: {xs:"450px", lg:"1525px"},
+        height: "711.66px",
         display: "flex",
         flexDirection: "column",
         backgroundColor: "white",
-        borderRadius: 2,
         overflow: "hidden",
-        
         boxSizing: "border-box",
 
         "@media (max-width:600px)": {

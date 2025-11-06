@@ -29,7 +29,10 @@ const Calendar = () => {
           alignContent:"center",
           boxSizing:"border-box",
           position:"relative",
-          alignItems: "center"
+          alignItems: "center",
+          overflow:"hidden",
+          overflowX: "hidden", // ✅ 외부 가로 스크롤 완전 차단
+          overflowY:"hidden",
         }}>
     <Box className="page" sx={{ display:"flex",  }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

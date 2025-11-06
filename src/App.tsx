@@ -20,7 +20,7 @@ function App() {
         flexDirection:"row",
         backgroundColor:"#F5F5F5",
         alignContent:"center",
-        paddingY:{xs:0, lg:7.9},
+        paddingY:{xs:0, lg:5},
         paddingX:{xs:0, lg:10},
         boxSizing:"border-box",
         gap:3

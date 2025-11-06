@@ -49,8 +49,7 @@ const CalendarWeek = () => {
       sx={{
         position: "relative",
         width: "100%",
-        maxWidth: {xs:"450px", lg:"1430px"},
-        borderRadius: 2,
+        maxWidth: {xs:"500px", lg:"1525px"},
         backgroundColor: "white",
         display: "flex",
         flexDirection: "column",
@@ -59,7 +58,7 @@ const CalendarWeek = () => {
         margin: "0 auto",
         overflowX: "hidden", // ✅ 외부 가로 스크롤 완전 차단
         overflowY:"hidden",
-        
+        alignContent:"center"
       }}
     >
       {/* ✅ 시간 헤더 */}
@@ -108,9 +107,9 @@ const CalendarWeek = () => {
       <Box
         sx={{
           position: "absolute",
-          top: 40,
+          top: {xs:30 ,lg:40},
           left: 0,
-          width: "70px",
+          width: {xs:"99px", lg:"70px"},
           height: "28px",
           backgroundColor: "#fff",
           zIndex: 3,
