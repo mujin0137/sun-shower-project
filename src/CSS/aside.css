@@ -43,6 +43,7 @@
   transition: background-color 0.2s;
   text-align: left;
   height: 50px;
+  align-content: center;
 }
 
 .aside-list-button:hover {
@@ -51,20 +52,17 @@
 }
 
 
-.aside-list-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 56px;
-  color: #000;
-}
-
-.aside-list-text {
+.aside-btnicon {
   font-size: 30px;
   font-family: 'Pretendard';
   font-weight: bold;
   color: #000;
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  flex-direction: row;
 }
 
 .aside-list:hover {
