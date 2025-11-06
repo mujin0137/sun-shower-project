@@ -20,16 +20,26 @@ const Calendar = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+      <Box 
+        sx={{
+          backgroundColor:"#9999",
+          display:"flex",
+          borderRadius:2,
+          width:"100%",
+          alignContent:"center",
+          boxSizing:"border-box",
+          position:"relative",
+          alignItems: "center"
+        }}>
+    <Box className="page" sx={{ display:"flex",  }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={getCurrentTab()} onChange={handleTabChange}>
           <Tab label="일간" value="/calendar/day" />
           <Tab label="주간" value="/calendar/week" />
           <Tab label="월간" value="/calendar/month" />
         </Tabs>
-      </Box>
-      <Box sx={{ p: 3 }}>
         <Outlet />
+      </Box>
       </Box>
     </Box>
   );

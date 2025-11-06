@@ -31,8 +31,6 @@ import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import "../CSS/transportation.css";
 
-
-
 declare global {
   interface Window {
     kakao: any;
@@ -193,7 +191,7 @@ const Transportation = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/transportation/directions?origin=${encodeURIComponent(
+        `http://localhost:5001/api/transportation/directions?origin=${encodeURIComponent(
           origin
         )}&destination=${encodeURIComponent(
           destination
@@ -255,50 +253,48 @@ const Transportation = () => {
     return `${hours}시간 ${mins}분`;
   };
 
-  
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Box
-      className="transportation"
-      sx={{ maxWidth: 1800,
-          height: "100vh",
-          minHeight: 688,
-      }}
-    >
-      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-        
-      </Typography>
+    <Box className="transportation" sx={{ maxWidth: 1800, minHeight: 690 }}>
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}></Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", md: "row" },
-              gap: 0,
-              position : "relative",
-              overflow:"hidden",
-            }}
-          >            
-            {/* 왼쪽: 검색 및 결과 */}
-            <Box sx={{                
-                width : "100%",
-                position:"absolute",
-                top:{md:0},
-                bottom:{xs:0},
-                zIndex:11, 
-                }}>
-              {/* 검색 입력 */}
-           
-            <Box sx={{ display: "flex", gap: 3, position: "relative" }}>
-              {/*접기패널*/}
-               <Box
-              sx={{  
-                position : "relative",              
-                width: {xs:"100%", md:600},
-                transition : "left 0.4s ease",
-                left : {md:collapsed ? -580 : 0},
-                bottom:{xs:collapsed ? -400 : 0, md:0},
-                zIndex : 11,               
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          height: { xs: "auto", md: "790px" },
+          position: "relative",
+          top: { md: "25px" },
+          overflow: "hidden",
+          alignItems: "stretch",
+          borderRadius: "10px",
+        }}
+      >
+        {/* 왼쪽: 검색 및 결과 */}
+        <Box
+          sx={{
+            minWidth: { xs: "100%", md: 340 },
+            width: { xs: "100%", md: 340 },
+            position: "absolute",
+            height: "100%",
+            top: { xs: "400px", md: 0 },
+            bottom: { xs: "auto", md: 0 },
+            zIndex: 11,
+          }}
+        >
+          {/* 검색 입력 */}
+
+          <Box sx={{ display: "flex", gap: 3, position: "relative" }}>
+            {/*접기패널*/}
+            <Box
+              sx={{
+                position: "relative",
+                width: { xs: "100%", md: 600 },
+                transition: "left 0.4s ease",
+                left: { md: collapsed ? -550 : 0 },
+                bottom: { xs: collapsed ? -400 : 0, md: 0 },
+                zIndex: 11,
               }}
             >
               {/* 접기/펼치기 버튼 */}
@@ -306,385 +302,451 @@ const Transportation = () => {
                 onClick={() => setCollapsed(!collapsed)}
                 sx={{
                   position: "absolute",
-                  top: {md:"200px",},
-                  left: {md:"580px", xs:"calc(50% - 20px)"},                
-                  transform: {md:"translateY(-50%)", xs:"translateX(-50%)"},       
-                  rotate:{md:"0deg", xs:"90deg"},           
-                  background: {xs:"gray", md:"white"},
-                  border: {xs:"none", md:"1px solid #ccc"},
-                  width: {xs: 5, md : 40},
-                  height: {xs : 40, md : 40},
+                  top: { md: "350px" },
+                  left: { md: "545px", xs: "calc(50% - 20px)" },
+                  transform: { md: "translateY(-50%)", xs: "translateX(-50%)" },
+                  rotate: { md: "0deg", xs: "90deg" },
+                  background: { xs: "gray", md: "white" },
+                  border: { xs: "none", md: "1px solid #ccc" },
+                  width: { xs: 5, md: 40 },
+                  height: { xs: 40, md: 40 },
                   borderRadius: { xs: "5px", md: "20px / 50%" },
-                  zIndex : 30,
+                  zIndex: 30,
                   "&:hover": { background: "#f0f0f0" },
-                  filter: "invert(1)",
-                  overflow:{xs:"hidden", md:"visible"},
-                  padding:{xs:0},
+
+                  overflow: { xs: "hidden", md: "visible" },
+                  padding: { xs: 0 },
                 }}
               >
-                {collapsed ? <ChevronRight sx={{height:{xs:0, md:40},width:{sx:0}}}/> : <ChevronLeft sx={{height:{xs:0, md:40}}}/>}
+                {collapsed ? (
+                  <ChevronRight
+                    sx={{ height: { xs: 0, md: 40 }, width: { sx: 0 } }}
+                  />
+                ) : (
+                  <ChevronLeft sx={{ height: { xs: 0, md: 40 } }} />
+                )}
               </IconButton>
               <Paper
                 elevation={3}
-                sx={{                  
-                  height:{xs:"80vh", md:"100vh"},
-                  p: 4.3,
-                  transition : "padding 0.4s ease", 
-                }}
-              >
-                  
-                  <Stack spacing={2}>
-                  {/* 교통수단 탭 */}
-            <Box sx={{ 
-               mb: 3,
-              }}>
-                <Stack direction="row" spacing={1}
-                        sx={{width :"100%"}}>
-                <Button
-                  variant={transportMode === "transit" ? "contained" : "outlined"}
-                  startIcon={<DirectionsTransit />}
-                  onClick={() => setTransportMode("transit")}
-                  sx={{ flex: 1, py: 1.5 ,
-                      borderRadius : "30px",
-                      fontSize : {xs : "0.75rem" , md : "1rem"},
-                      minWidth : {xs : "auto" , md : 0},
-                      whiteSpace : "nowrap",
-                      textTransform : "none"
-                  }}
-                >
-                  대중교통
-                </Button>
-                <Button
-                  variant={transportMode === "driving" ? "contained" : "outlined"}
-                  startIcon={<DirectionsCar />}
-                  onClick={() => setTransportMode("driving")}
-                  sx={{ flex: 1, py: 1.5,
-                    borderRadius : "30px",
-                    fontSize : {xs : "0.75rem" , md : "1rem"},
-                    minWidth : {xs : "auto" , md : 0},
-                    whiteSpace : "nowrap",
-                    textTransform : "none"
-                  }}
-                >
-                  자가용
-                </Button>
-                <Button
-                  variant={transportMode === "walking" ? "contained" : "outlined"}
-                  startIcon={<DirectionsWalk />}
-                  onClick={() => setTransportMode("walking")}
-                  sx={{ flex: 1, py: 1.5,
-                    borderRadius : "30px",
-                    fontSize : {xs : "0.75rem" , md : "1rem"},
-                    minWidth : {xs : "auto" , md : 0},
-                    whiteSpace : "nowrap",
-                    textTransform : "none"
-                  }}
-                >
-                  도보
-                </Button>
-
-                <Box sx={{ 
-                  width: 120,
-                  display:{md:"none"}
-                }}>
-                  <FormControl fullWidth>
-                    <Select
-                      value={option}
-                      onChange={(e) => setOption(Number(e.target.value))}
-                      sx={{textAlign : "center" , height : "49", alignItems : "center"}}
-                    >
-                      <MenuItem value={0}>최적</MenuItem>
-                      <MenuItem value={1}>최소 시간</MenuItem>
-                      <MenuItem value={2}>최소 환승</MenuItem>
-                      <MenuItem value={3}>최소 도보</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-              </Stack>
-           </Box>
-
-             {/*출발지 도착지*/}
-              <Box sx ={{display : "flex", flexDirection : "column", gap: 2 , position : "relative"}}>
-              <TextField
-                fullWidth
-                label="출발지"
-                placeholder="예: 서울역, 강남역"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-              />
-          
-              <TextField
-                fullWidth
-                label="도착지"
-                placeholder="예: 대구역, 홍대입구역"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-              />
-                {/*출발지 도착지 바꾸기 버튼*/}
-             <Button
-                onClick={handleSwap}
-                size="small"
-                variant="outlined"
                 sx={{
-                  position : "absolute",
-                  top : 45,
-                  right : "-15px",
-                  borderRadius: "50%",
-                  minWidth: "40px",
-                  width: "40px",
-                  height: "40px",
-                  p: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background :"white",
+                  height: { xs: "80vh", md: "100vh" },
+                  p: 4.3,
+                  transition: "padding 0.4s ease",
                 }}
               >
-                <SwapVert sx={{ fontSize: 30 }} />
-              </Button>
-             </Box> 
-
-             <Stack direction="row" spacing={2} alignItems="center" justifyContent="center" >
-             
-              <Box sx={{ 
-                width: 140,
-                display:{xs:"none", md:"block"}
-              }}>
-                <FormControl fullWidth>
-                  <Select
-                    value={option}
-                    onChange={(e) => setOption(Number(e.target.value))}
-                    sx={{textAlign : "center" , height : "49", alignItems : "center"}}
+                <Stack spacing={2}>
+                  {/* 교통수단 탭 */}
+                  <Box
+                    sx={{
+                      mb: 3,
+                    }}
                   >
-                    <MenuItem value={0}>최적</MenuItem>
-                    <MenuItem value={1}>최소 시간</MenuItem>
-                    <MenuItem value={2}>최소 환승</MenuItem>
-                    <MenuItem value={3}>최소 도보</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <Button
-                fullWidth
-                variant="contained"
-                size="large"
-                startIcon={<Search />}
-                onClick={handleSearch}
-                disabled={loading}
-                sx={{ py: 1.5 , width : "340px", justifyContent : "center" }}
-              >
-                {loading ? "검색 중..." : "길찾기"}
-              </Button>
-              </Stack> 
-              {/* 에러 메시지 */} {/* 로딩 */}
-          {loading && (
-            <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
-              <CircularProgress />
-            </Box>
-          )}
-
-          {/* 에러 */}
-          {error && (
-            <Alert severity="error" sx={{ mb: 3 }}>
-              {error}
-            </Alert>
-          )}
-
-          {/* 경로 결과 */}
-          {routes && routes.length > 0 && (
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                📊 총 {routes.length}개의 경로를 찾았습니다
-              </Typography>
-
-              <Stack spacing={2}>
-                {routes.map((route, index) => (
-                  <Card key={index} elevation={3}>
-                    <CardContent sx={{bgcolor : "white"}}>
-                      {/* 경로 요약 */}
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="h6" sx={{ mb: 1 }}>
-                          경로 {index + 1} - {route.type}
-                        </Typography>
-                        <Stack direction="row" spacing={2} flexWrap="wrap">
-                          <Chip
-                            icon={<AccessTime />}
-                            label={formatTime(route.summary.totalTime)}
-                            color="primary"
-                            size="small"
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{
+                        width: "100%",
+                        justifyContent: {
+                          xs: "flex-start",
+                          md: "space-between",
+                        },
+                        px: { xs: 0, md: 0 },
+                      }}
+                    >
+                      <Button
+                        variant={
+                          transportMode === "transit" ? "contained" : "outlined"
+                        }
+                        startIcon={
+                          <DirectionsTransit
+                            sx={{ display: { xs: "none", md: "block" } }}
                           />
-                          {route.summary.payment !== undefined && (
-                            <Chip
-                              icon={<Payment />}
-                              label={`${route.summary.payment.toLocaleString()}원`}
-                              color="success"
-                              size="small"
-                            />
-                          )}
-                          {transportMode === "transit" && (
-                            <Chip
-                              icon={<TransferWithinAStation />}
-                              label={`환승 ${
-                                route.summary.busTransitCount +
-                                route.summary.subwayTransitCount
-                              }회`}
-                              size="small"
-                            />
-                          )}
-                          {route.summary.totalWalk !== undefined && (
-                            <Chip
-                              icon={<DirectionsWalk />}
-                              label={`도보 ${route.summary.totalWalk}m`}
-                              size="small"
-                            />
-                          )}
-                        </Stack>
-                      </Box>
+                        }
+                        onClick={() => setTransportMode("transit")}
+                        sx={{
+                          flex: 1,
+                          height: 40,
+                          borderRadius: "30px",
+                          fontSize: { xs: "14px", md: "14px" },
+                          minWidth: { xs: "auto", md: 0 },
+                          whiteSpace: "nowrap",
+                          textTransform: "none",
+                        }}
+                      >
+                        대중교통
+                      </Button>
+                      <Button
+                        variant={
+                          transportMode === "driving" ? "contained" : "outlined"
+                        }
+                        startIcon={
+                          <DirectionsCar
+                            sx={{ display: { xs: "none", md: "block" } }}
+                          />
+                        }
+                        onClick={() => setTransportMode("driving")}
+                        sx={{
+                          flex: 1,
+                          borderRadius: "30px",
+                          height: 40,
+                          fontSize: { xs: "14px", md: "14px" },
+                          minWidth: { xs: "auto", md: 0 },
+                          whiteSpace: "nowrap",
+                          textTransform: "none",
+                        }}
+                      >
+                        자가용
+                      </Button>
+                      <Button
+                        variant={
+                          transportMode === "walking" ? "contained" : "outlined"
+                        }
+                        startIcon={
+                          <DirectionsWalk
+                            sx={{ display: { xs: "none", md: "block" } }}
+                          />
+                        }
+                        onClick={() => setTransportMode("walking")}
+                        sx={{
+                          flex: 1,
+                          height: 40,
+                          borderRadius: "30px",
+                          fontSize: { xs: "14px", md: "14px" },
+                          minWidth: { xs: "auto", md: 0 },
+                          whiteSpace: "nowrap",
+                          textTransform: "none",
+                        }}
+                      >
+                        도보
+                      </Button>
 
-                      <Divider sx={{ my: 2 }} />
-
-                      {/* 상세 경로 */}
-                      {route.subPaths && route.subPaths.length > 0 && (
-                        <Box>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ mb: 1, fontWeight: "bold" }}
+                      <Box
+                        sx={{
+                          width: { xs: "90px", md: "120px" },
+                          display: { md: "none" },
+                          marginRight: { xs: "20px" },
+                        }}
+                      >
+                        <FormControl fullWidth>
+                          <Select
+                            value={option}
+                            onChange={(e) => setOption(Number(e.target.value))}
+                            sx={{
+                              textAlign: "center",
+                              height: { xs: 40 },
+                              alignItems: "center",
+                              fontSize: { xs: "0.75rem" },
+                            }}
                           >
-                            상세 경로
-                          </Typography>
-                          <Stack spacing={1.5}>
-                            {route.subPaths.map((subPath, subIndex) => (
-                              <Box
-                                key={subIndex}
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 2,
-                                  p: 1.5,
-                                  bgcolor : "transparent",
-                                  borderRadius: 1,
-                                }}
-                              >
-                                <Box sx={{ minWidth: 40 }}>
-                                  {getTransportIcon(subPath.type || "")}
-                                </Box>
+                            <MenuItem value={0}>최적</MenuItem>
+                            <MenuItem value={1}>최소 시간</MenuItem>
+                            <MenuItem value={2}>최소 환승</MenuItem>
+                            <MenuItem value={3}>최소 도보</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Box>
+                    </Stack>
+                  </Box>
+                  {/*출발지 도착지*/}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      position: "relative",
+                    }}
+                  >
+                    <TextField
+                      fullWidth
+                      label="출발지"
+                      placeholder="예: 서울역, 강남역"
+                      value={origin}
+                      onChange={(e) => setOrigin(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                    />
 
-                                <Box sx={{ flex: 1 }}>
-                                  {subPath.type === "subway" && (
-                                    <>
-                                      <Typography
-                                        variant="body2"
-                                        fontWeight="bold"
-                                      >
-                                        🚇 {subPath.line}
-                                        {subPath.way &&
-                                          ` (${subPath.way} 방향)`}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                      >
-                                        {subPath.startStation} →{" "}
-                                        {subPath.endStation} (
-                                        {subPath.stationCount}개 정거장)
-                                      </Typography>
-                                    </>
-                                  )}
+                    <TextField
+                      fullWidth
+                      label="도착지"
+                      placeholder="예: 대구역, 홍대입구역"
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                    />
+                    {/*출발지 도착지 바꾸기 버튼*/}
+                    <Button
+                      onClick={handleSwap}
+                      size="small"
+                      variant="outlined"
+                      sx={{
+                        position: "absolute",
+                        top: 45,
+                        right: "-15px",
+                        borderRadius: "50%",
+                        minWidth: "40px",
+                        width: "40px",
+                        height: "40px",
+                        p: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "white",
+                      }}
+                    >
+                      <SwapVert sx={{ fontSize: 30 }} />
+                    </Button>
+                  </Box>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Box
+                      sx={{
+                        width: 140,
+                        display: { xs: "none", md: "block" },
+                      }}
+                    >
+                      <FormControl fullWidth>
+                        <Select
+                          value={option}
+                          onChange={(e) => setOption(Number(e.target.value))}
+                          sx={{
+                            textAlign: "center",
+                            height: "49",
+                            alignItems: "center",
+                          }}
+                        >
+                          <MenuItem value={0}>최적</MenuItem>
+                          <MenuItem value={1}>최소 시간</MenuItem>
+                          <MenuItem value={2}>최소 환승</MenuItem>
+                          <MenuItem value={3}>최소 도보</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
 
-                                  {subPath.type === "bus" && (
-                                    <>
-                                      <Typography
-                                        variant="body2"
-                                        fontWeight="bold"
-                                      >
-                                        🚌 {subPath.busNo}번 {subPath.busType}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                      >
-                                        {subPath.startStation} →{" "}
-                                        {subPath.endStation} (
-                                        {subPath.stationCount}개 정거장)
-                                      </Typography>
-                                    </>
-                                  )}
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      startIcon={<Search />}
+                      onClick={handleSearch}
+                      disabled={loading}
+                      sx={{ py: 1.5, width: "340px", justifyContent: "center" }}
+                    >
+                      {loading ? "검색 중..." : "길찾기"}
+                    </Button>
+                  </Stack>
+                  {/* 에러 메시지 */} {/* 로딩 */}
+                  {loading && (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "center", my: 5 }}
+                    >
+                      <CircularProgress />
+                    </Box>
+                  )}
+                  {/* 에러 */}
+                  {error && (
+                    <Alert severity="error" sx={{ mb: 3 }}>
+                      {error}
+                    </Alert>
+                  )}
+                  {/* 경로 결과 */}
+                  {routes && routes.length > 0 && (
+                    <Box>
+                      <Typography variant="h6" sx={{ mb: 2 }}>
+                        📊 총 {routes.length}개의 경로를 찾았습니다
+                      </Typography>
 
-                                  {subPath.type === "walk" && (
-                                    <Typography
-                                      variant="body2"
-                                      color="text.secondary"
-                                    >
-                                      🚶 도보 {subPath.distance}m (
-                                      {subPath.sectionTime}분)
-                                    </Typography>
-                                  )}
-
-                                  {subPath.type === "train" && (
-                                    <>
-                                      <Typography
-                                        variant="body2"
-                                        fontWeight="bold"
-                                      >
-                                        🚄 {subPath.trainType}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                      >
-                                        {subPath.startStation} →{" "}
-                                        {subPath.endStation}
-                                      </Typography>
-                                    </>
-                                  )}
-
-                                  {(subPath.type === "express_bus" ||
-                                    subPath.type === "intercity_bus") && (
-                                    <>
-                                      <Typography
-                                        variant="body2"
-                                        fontWeight="bold"
-                                      >
-                                        🚌 {subPath.trafficType}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                      >
-                                        {subPath.startStation} →{" "}
-                                        {subPath.endStation}
-                                      </Typography>
-                                    </>
-                                  )}
-                                </Box>
-
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  {subPath.sectionTime}분
+                      <Stack spacing={2}>
+                        {routes.map((route, index) => (
+                          <Card key={index} elevation={3}>
+                            <CardContent sx={{ bgcolor: "white" }}>
+                              {/* 경로 요약 */}
+                              <Box sx={{ mb: 2 }}>
+                                <Typography variant="h6" sx={{ mb: 1 }}>
+                                  경로 {index + 1} - {route.type}
                                 </Typography>
+                                <Stack
+                                  direction="row"
+                                  spacing={2}
+                                  flexWrap="wrap"
+                                >
+                                  <Chip
+                                    icon={<AccessTime />}
+                                    label={formatTime(route.summary.totalTime)}
+                                    color="primary"
+                                    size="small"
+                                  />
+                                  {route.summary.payment !== undefined && (
+                                    <Chip
+                                      icon={<Payment />}
+                                      label={`${route.summary.payment.toLocaleString()}원`}
+                                      color="success"
+                                      size="small"
+                                    />
+                                  )}
+                                  {transportMode === "transit" && (
+                                    <Chip
+                                      icon={<TransferWithinAStation />}
+                                      label={`환승 ${
+                                        route.summary.busTransitCount +
+                                        route.summary.subwayTransitCount
+                                      }회`}
+                                      size="small"
+                                    />
+                                  )}
+                                  {route.summary.totalWalk !== undefined && (
+                                    <Chip
+                                      icon={<DirectionsWalk />}
+                                      label={`도보 ${route.summary.totalWalk}m`}
+                                      size="small"
+                                    />
+                                  )}
+                                </Stack>
                               </Box>
-                            ))}
-                          </Stack>
-                        </Box>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </Stack>
-            </Box>
-          )}
-              </Stack>     
+
+                              <Divider sx={{ my: 2 }} />
+
+                              {/* 상세 경로 */}
+                              {route.subPaths && route.subPaths.length > 0 && (
+                                <Box>
+                                  <Typography
+                                    variant="subtitle2"
+                                    sx={{ mb: 1, fontWeight: "bold" }}
+                                  >
+                                    상세 경로
+                                  </Typography>
+                                  <Stack spacing={1.5}>
+                                    {route.subPaths.map((subPath, subIndex) => (
+                                      <Box
+                                        key={subIndex}
+                                        sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          gap: 2,
+                                          p: 1.5,
+                                          bgcolor: "transparent",
+                                          borderRadius: 1,
+                                        }}
+                                      >
+                                        <Box sx={{ minWidth: 40 }}>
+                                          {getTransportIcon(subPath.type || "")}
+                                        </Box>
+
+                                        <Box sx={{ flex: 1 }}>
+                                          {subPath.type === "subway" && (
+                                            <>
+                                              <Typography
+                                                variant="body2"
+                                                fontWeight="bold"
+                                              >
+                                                🚇 {subPath.line}
+                                                {subPath.way &&
+                                                  ` (${subPath.way} 방향)`}
+                                              </Typography>
+                                              <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                              >
+                                                {subPath.startStation} →{" "}
+                                                {subPath.endStation} (
+                                                {subPath.stationCount}개 정거장)
+                                              </Typography>
+                                            </>
+                                          )}
+
+                                          {subPath.type === "bus" && (
+                                            <>
+                                              <Typography
+                                                variant="body2"
+                                                fontWeight="bold"
+                                              >
+                                                🚌 {subPath.busNo}번{" "}
+                                                {subPath.busType}
+                                              </Typography>
+                                              <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                              >
+                                                {subPath.startStation} →{" "}
+                                                {subPath.endStation} (
+                                                {subPath.stationCount}개 정거장)
+                                              </Typography>
+                                            </>
+                                          )}
+
+                                          {subPath.type === "walk" && (
+                                            <Typography
+                                              variant="body2"
+                                              color="text.secondary"
+                                            >
+                                              🚶 도보 {subPath.distance}m (
+                                              {subPath.sectionTime}분)
+                                            </Typography>
+                                          )}
+
+                                          {subPath.type === "train" && (
+                                            <>
+                                              <Typography
+                                                variant="body2"
+                                                fontWeight="bold"
+                                              >
+                                                🚄 {subPath.trainType}
+                                              </Typography>
+                                              <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                              >
+                                                {subPath.startStation} →{" "}
+                                                {subPath.endStation}
+                                              </Typography>
+                                            </>
+                                          )}
+
+                                          {(subPath.type === "express_bus" ||
+                                            subPath.type ===
+                                              "intercity_bus") && (
+                                            <>
+                                              <Typography
+                                                variant="body2"
+                                                fontWeight="bold"
+                                              >
+                                                🚌 {subPath.trafficType}
+                                              </Typography>
+                                              <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                              >
+                                                {subPath.startStation} →{" "}
+                                                {subPath.endStation}
+                                              </Typography>
+                                            </>
+                                          )}
+                                        </Box>
+
+                                        <Typography
+                                          variant="caption"
+                                          color="text.secondary"
+                                        >
+                                          {subPath.sectionTime}분
+                                        </Typography>
+                                      </Box>
+                                    ))}
+                                  </Stack>
+                                </Box>
+                              )}
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </Stack>
+                    </Box>
+                  )}
+                </Stack>
               </Paper>
             </Box>
           </Box>
-
-          
-        
-         
         </Box>
 
         {/* 오른쪽: 지도 */}
@@ -693,9 +755,11 @@ const Transportation = () => {
             elevation={3}
             sx={{
               position: "sticky",
-              top: 20,
-              height: { xs: "100vh", md: "100vh" },
-              minHeight: 400,
+              top: 0,
+              height: { xs: "100vh", md: "790px" },
+              minHeight: 500,
+
+              // zIndex: 12,
             }}
           >
             <Box
@@ -724,7 +788,8 @@ const Transportation = () => {
                 ref={mapRef}
                 sx={{
                   flex: 1,
-                  minHeight : 500,
+                  height: "100%",
+                  minHeight: 500,
                   bgcolor: "grey.100",
                   position: "relative",
                 }}

@@ -163,7 +163,7 @@ class WeatherService {
     }
   }
 
-  // 예보 조회
+  // 예보 조회 (OpenWeatherMap 5일 예보)
   async getForecast({ lat, lon, city }) {
     try {
       let coords;
@@ -180,27 +180,27 @@ class WeatherService {
         throw new Error("위도/경도 또는 도시명이 필요합니다.");
       }
 
-      console.log("🔍 기상청 API허브 예보 요청:");
+      console.log("🔍 OpenWeather 예보 API 요청:");
       console.log("- 위치:", locationName);
       console.log("- 좌표:", coords);
+      console.log("- API Key:", this.apiKey ? "설정됨" : "없음");
 
-      // 기상청 API허브 - 동네예보 조회
-      const url = `${this.baseURL}/typ01/url/fct_afs_dl.php`;
+      const url = `${this.baseURL}/forecast`;
 
       const response = await axios.get(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
         params: {
           lat: coords.lat,
           lon: coords.lon,
-          disp: 0, // 0: 동네예보
-          appKey: this.apiKey, // API 키를 query parameter로 전달
+          appid: this.apiKey,
+          units: "metric", // 섭씨 온도
+          lang: "kr", // 한국어
         },
         timeout: 10000,
       });
 
-      console.log("✅ 기상청 API허브 예보 응답 성공");
+      console.log("✅ OpenWeather 예보 API 응답 성공");
+      console.log("- 도시:", response.data.city.name);
+      console.log("- 예보 개수:", response.data.list.length);
 
       return this.formatForecastData(
         response.data,
@@ -209,12 +209,12 @@ class WeatherService {
         coords.lon
       );
     } catch (error) {
-      console.error("❌ 기상청 예보 API허브 오류:", error.message);
+      console.error("❌ OpenWeather 예보 API 오류:", error.message);
       if (error.response) {
         console.error("❌ 응답 상태:", error.response.status);
         console.error("❌ 응답 데이터:", error.response.data);
       }
-      throw new Error("날씨 예보를 가져올 수 없습니다.");
+      throw new Error("날씨 예보를 가져올 수 없습니다: " + error.message);
     }
   }
 
@@ -257,47 +257,39 @@ class WeatherService {
     };
   }
 
-  // 예보 데이터 포맷팅
+  // 예보 데이터 포맷팅 (OpenWeatherMap API 응답)
   formatForecastData(data, locationName, lat, lon) {
-    const forecasts = [];
-
-    // 기본 예보 데이터 생성 (실제 API 응답에 맞게 수정 필요)
-    for (let i = 0; i < 40; i++) {
-      const forecastTime = new Date();
-      forecastTime.setHours(forecastTime.getHours() + i * 3);
-
-      forecasts.push({
-        timestamp: forecastTime.toISOString(),
-        weather: {
-          main: "맑음",
-          description: "맑음",
-          icon: "01d",
-          iconUrl: "https://openweathermap.org/img/wn/01d@2x.png",
-        },
-        temperature: {
-          current: 15 + Math.random() * 5,
-          feelsLike: 15 + Math.random() * 5,
-          min: 12,
-          max: 20,
-        },
-        details: {
-          humidity: 60,
-          pressure: 1013,
-          windSpeed: 2.5,
-          windDeg: 0,
-          clouds: 0,
-          pop: Math.random() * 30, // 강수확률
-        },
-      });
-    }
+    const forecasts = data.list.map((item) => ({
+      timestamp: new Date(item.dt * 1000).toISOString(),
+      weather: {
+        main: item.weather[0].main,
+        description: item.weather[0].description,
+        icon: item.weather[0].icon,
+        iconUrl: `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
+      },
+      temperature: {
+        current: Math.round(item.main.temp),
+        feelsLike: Math.round(item.main.feels_like),
+        min: Math.round(item.main.temp_min),
+        max: Math.round(item.main.temp_max),
+      },
+      details: {
+        humidity: item.main.humidity,
+        pressure: item.main.pressure,
+        windSpeed: item.wind.speed,
+        windDeg: item.wind.deg,
+        clouds: item.clouds.all,
+        pop: Math.round(item.pop * 100), // 강수확률 (0~1 -> 0~100%)
+      },
+    }));
 
     return {
       location: {
-        name: locationName,
-        country: "KR",
+        name: locationName || data.city.name,
+        country: data.city.country,
         coordinates: {
-          lat: lat,
-          lng: lon,
+          lat: lat || data.city.coord.lat,
+          lng: lon || data.city.coord.lon,
         },
       },
       forecasts: forecasts,
