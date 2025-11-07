@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { WbSunny, WbCloudy } from "@mui/icons-material";
 import "../CSS/weather.css";
+import { relative } from "path";
 
 interface CityWeather {
   city: string;
@@ -263,6 +264,8 @@ const Weather = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width: "100%",
+          position: "relative",
         }}
       >
         <CircularProgress />
@@ -274,7 +277,7 @@ const Weather = () => {
     <Box
       className="weather"
       sx={{
-        backgroundColor: { xs: "transparent", lg: "#ff7979ff" },
+        backgroundColor: { xs: "transparent", lg: "#ffffffff" },
         flexGrow: 1,
         width: "100%",
         boxSizing: "border-box",
@@ -287,8 +290,8 @@ const Weather = () => {
     >
       <Box
         sx={{
+          width: "100%",
           display: "flex",
-          gap: 3,
           flexDirection: { xs: "column-reverse", lg: "row" },
           justifyContent: "space-between",
         }}
@@ -639,7 +642,7 @@ const Weather = () => {
                       p: 1,
                       mt: 3,
                       mb: 5,
-                      backgroundColor: "#D9D9D9",
+                      backgroundColor: "#C7D7FF",
                       position: "relative",
                       width: "100%",
                       boxShadow: "none",
@@ -745,17 +748,19 @@ const Weather = () => {
                   </Paper>
 
                   {/* 주간 예보 */}
+                  {/* 주간 예보 */}
                   {dailyForecast.map((day, index) => (
                     <Box
                       key={index}
                       sx={{
                         display: "flex",
                         alignItems: "center",
+                        alignContent: "center",
                         justifyContent: "space-between",
                         textAlign: "center",
                         flexDirection: "column",
                         width: "100%",
-                        p: 1,
+                        py: 1,
                       }}
                     >
                       <Box
@@ -770,7 +775,7 @@ const Weather = () => {
                       >
                         <Typography
                           variant="body2"
-                          sx={{ width: 60, fontWeight: "bold" }}
+                          sx={{ width: 50, fontWeight: "bold" }}
                         >
                           {getDayLabel(index)}
                         </Typography>
@@ -778,13 +783,17 @@ const Weather = () => {
                         <Typography
                           variant="caption"
                           color="text.secondary"
-                          sx={{ textAlign: "center" }}
+                          sx={{ textAlign: "center", width: 50 }}
                         >
                           {day.pop}%
                         </Typography>
 
-                        <WbSunny sx={{ fontSize: 20, color: "#FFA500" }} />
-                        <WbCloudy sx={{ fontSize: 20, color: "#808080" }} />
+                        <WbSunny
+                          sx={{ fontSize: 20, color: "#FFA500", width: 30 }}
+                        />
+                        <WbCloudy
+                          sx={{ fontSize: 20, color: "#808080", width: 30 }}
+                        />
 
                         <Typography variant="body2" fontWeight="bold">
                           {day.temperature.max}°
@@ -792,7 +801,7 @@ const Weather = () => {
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          sx={{ ml: 1 }}
+                          sx={{ ml: 1, width: 50 }}
                         >
                           {day.temperature.min}°
                         </Typography>
@@ -809,14 +818,16 @@ const Weather = () => {
             elevation={3}
             sx={{
               minWidth: 0,
-              width: "100%",
-              backgroundColor: "#682b2bff",
+              width: "50%",
+              backgroundColor: "#ffffffff",
               alignItems: "center",
               alignContent: "center",
               borderRadius: "10px",
               justifyContent: "space-between",
               boxShadow: { xs: "0px -4px 4px rgba(0, 0, 0, 0.25)", lg: "none" },
-              px: 4,
+              px: 10,
+              boxSizing: "border-box",
+              whiteSpace: "nowrap",
             }}
           >
             {/* 상단 오늘의 날씨 현황 */}
@@ -1097,7 +1108,7 @@ const Weather = () => {
                 p: 1,
                 mt: 3,
                 mb: 5,
-                backgroundColor: "#D9D9D9",
+                backgroundColor: "#C7D7FF",
                 position: "relative",
                 width: "100%",
                 boxShadow: "none",
@@ -1206,11 +1217,12 @@ const Weather = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
+                  alignContent: "center",
                   justifyContent: "space-between",
                   textAlign: "center",
-                  flexDirection: "",
+                  flexDirection: "column",
                   width: "100%",
-                  p: 1,
+                  py: 1,
                 }}
               >
                 <Box
@@ -1225,7 +1237,7 @@ const Weather = () => {
                 >
                   <Typography
                     variant="body2"
-                    sx={{ width: 60, fontWeight: "bold" }}
+                    sx={{ width: 50, fontWeight: "bold" }}
                   >
                     {getDayLabel(index)}
                   </Typography>
@@ -1233,13 +1245,15 @@ const Weather = () => {
                   <Typography
                     variant="caption"
                     color="text.secondary"
-                    sx={{ textAlign: "center" }}
+                    sx={{ textAlign: "center", width: 50 }}
                   >
                     {day.pop}%
                   </Typography>
 
-                  <WbSunny sx={{ fontSize: 20, color: "#FFA500" }} />
-                  <WbCloudy sx={{ fontSize: 20, color: "#808080" }} />
+                  <WbSunny sx={{ fontSize: 20, color: "#FFA500", width: 30 }} />
+                  <WbCloudy
+                    sx={{ fontSize: 20, color: "#808080", width: 30 }}
+                  />
 
                   <Typography variant="body2" fontWeight="bold">
                     {day.temperature.max}°
@@ -1247,7 +1261,7 @@ const Weather = () => {
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ ml: 1 }}
+                    sx={{ ml: 1, width: 50 }}
                   >
                     {day.temperature.min}°
                   </Typography>
@@ -1262,8 +1276,9 @@ const Weather = () => {
         {/* 오른쪽 영역 - 지도 */}
         <Box
           sx={{
+            display: "flex",
             width: "100%",
-            background: "gray",
+            justifyContent: "center",
           }}
         >
           <Paper
@@ -1275,6 +1290,7 @@ const Weather = () => {
               overflow: "hidden",
               backgroundColor: "transparent",
               boxShadow: "none",
+              width: { xs: "100%", lg: "100%" },
             }}
           >
             {/* 한국 지도 영역 */}
@@ -1972,79 +1988,78 @@ const Weather = () => {
                   {city.name} {city.temperature}°
                 </Box>
               ))}
-
-              {/* 범례 */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  p: 1,
-                  rowGap: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    backgroundColor: "#63A465",
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "block", fontFamily: "Pretendard" }}
-                  >
-                    기온
-                  </Typography>
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    backgroundColor: "#31BCA0",
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "block", fontFamily: "Pretendard" }}
-                  >
-                    체감
-                  </Typography>
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    backgroundColor: "#3BB6F7",
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "block", fontFamily: "Pretendard" }}
-                  >
-                    강수
-                  </Typography>
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    backgroundColor: "#D9D9D9",
-                    color: "black",
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    sx={{ display: "block", fontFamily: "Pretendard" }}
-                  >
-                    적설
-                  </Typography>
-                </Button>
-              </Box>
             </Box>
           </Paper>
+          {/* 범례 */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 30,
+              right: 40,
+              p: 1,
+              rowGap: 1,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: "#63A465",
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{ display: "block", fontFamily: "Pretendard" }}
+              >
+                기온
+              </Typography>
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: "#31BCA0",
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{ display: "block", fontFamily: "Pretendard" }}
+              >
+                체감
+              </Typography>
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: "#3BB6F7",
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{ display: "block", fontFamily: "Pretendard" }}
+              >
+                강수
+              </Typography>
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor: "#D9D9D9",
+                color: "black",
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{ display: "block", fontFamily: "Pretendard" }}
+              >
+                적설
+              </Typography>
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

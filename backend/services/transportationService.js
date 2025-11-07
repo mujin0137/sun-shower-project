@@ -93,6 +93,35 @@ class TransportationService {
       });
 
       console.log("✅ ODsay API 응답 성공");
+
+      // 디버깅: 첫 번째 경로의 구조 확인
+      if (response.data.result?.path?.[0]) {
+        const firstPath = response.data.result.path[0];
+        console.log("🔍 첫 번째 경로 구조:");
+        console.log("  - mapObj:", firstPath.info?.mapObj?.substring(0, 100));
+        console.log("  - subPath 개수:", firstPath.subPath?.length);
+
+        // 첫 번째 subPath 확인
+        if (firstPath.subPath?.[0]) {
+          const firstSub = firstPath.subPath[0];
+          console.log("  - 첫 subPath 타입:", firstSub.trafficType);
+          console.log("  - passStopList 있음:", !!firstSub.passStopList);
+
+          if (firstSub.passStopList) {
+            console.log(
+              "  - passStopList 개수:",
+              firstSub.passStopList.stations?.length
+            );
+            if (firstSub.passStopList.stations?.[0]) {
+              console.log("  - 첫 정류장 좌표:", {
+                lat: firstSub.passStopList.stations[0].y,
+                lng: firstSub.passStopList.stations[0].x,
+              });
+            }
+          }
+        }
+      }
+
       return this.formatOdsayDirections(response.data, start, end);
     } catch (error) {
       console.error("❌ ODsay API 오류:", error.message);
@@ -132,8 +161,8 @@ class TransportationService {
     if (result.path && result.path.length > 0) {
       console.log(`✅ 도시 내 대중교통 ${result.path.length}개 경로 발견`);
       result.path.slice(0, 2).forEach((path) => {
-        // 경로 좌표 데이터 파싱
-        const pathData = this.parseGraphData(path.info);
+        // 경로 좌표 데이터 파싱 (subPath에서 실제 좌표 추출)
+        const pathData = this.parsePathCoordinates(path.subPath, start, end);
 
         routes.push({
           type: this.getRouteTypeName(path.pathType),
@@ -260,25 +289,115 @@ class TransportationService {
     };
   }
 
-  // 경로 좌표 데이터 파싱 (graphData)
-  parseGraphData(info) {
+  // subPath에서 실제 경로 좌표 추출 (정류장 좌표 사용)
+  parsePathCoordinates(subPaths, start, end) {
+    try {
+      console.log("🔍 parsePathCoordinates 시작:", {
+        subPathCount: subPaths?.length,
+        hasStart: !!start,
+        hasEnd: !!end,
+      });
+
+      const coordinates = [];
+
+      // 출발지 좌표
+      if (start) {
+        coordinates.push({ lat: start.lat, lng: start.lng });
+        console.log("📍 출발지 추가:", { lat: start.lat, lng: start.lng });
+      }
+
+      // 각 subPath를 순회하면서 좌표 수집
+      if (subPaths && subPaths.length > 0) {
+        subPaths.forEach((subPath, idx) => {
+          // 지하철(1) 또는 버스(2) 구간
+          if (
+            (subPath.trafficType === 1 || subPath.trafficType === 2) &&
+            subPath.passStopList?.stations
+          ) {
+            console.log(
+              `  - subPath ${idx + 1} (${
+                subPath.trafficType === 1 ? "지하철" : "버스"
+              }): ${subPath.passStopList.stations.length}개 정류장`
+            );
+
+            // 모든 정류장 좌표 추가
+            subPath.passStopList.stations.forEach((station) => {
+              const lat = parseFloat(station.y);
+              const lng = parseFloat(station.x);
+
+              if (!isNaN(lat) && !isNaN(lng)) {
+                coordinates.push({ lat, lng });
+              }
+            });
+          }
+          // 도보(3) 구간: 시작점과 끝점 좌표 추가
+          else if (subPath.trafficType === 3) {
+            console.log(`  - subPath ${idx + 1} (도보): 좌표 추가`);
+
+            // 도보 구간 시작 좌표
+            if (subPath.startX && subPath.startY) {
+              const startLat = parseFloat(subPath.startY);
+              const startLng = parseFloat(subPath.startX);
+              if (!isNaN(startLat) && !isNaN(startLng)) {
+                coordinates.push({ lat: startLat, lng: startLng });
+              }
+            }
+
+            // 도보 구간 끝 좌표
+            if (subPath.endX && subPath.endY) {
+              const endLat = parseFloat(subPath.endY);
+              const endLng = parseFloat(subPath.endX);
+              if (!isNaN(endLat) && !isNaN(endLng)) {
+                coordinates.push({ lat: endLat, lng: endLng });
+              }
+            }
+          }
+        });
+      }
+
+      // 도착지 좌표
+      if (end) {
+        coordinates.push({ lat: end.lat, lng: end.lng });
+        console.log("📍 도착지 추가:", { lat: end.lat, lng: end.lng });
+      }
+
+      console.log(`✅ 최종 경로 좌표 ${coordinates.length}개 수집 완료`);
+      return { path: coordinates };
+    } catch (error) {
+      console.error("❌ 경로 좌표 파싱 실패:", error);
+      return null;
+    }
+  }
+
+  // 경로 좌표 데이터 파싱 (graphData) - 더 이상 사용 안 함
+  parseGraphData(info, start, end) {
     try {
       console.log("🔍 parseGraphData 시작:", {
         hasMapObj: !!info.mapObj,
-        hasFirstStart: !!info.firstStartStation,
-        hasLastEnd: !!info.lastEndStation,
         mapObjLength: info.mapObj ? info.mapObj.length : 0,
+        hasStart: !!start,
+        hasEnd: !!end,
       });
+
+      // 좌표 유효성 검증 함수 (대한민국 영역)
+      const isValidKoreaCoord = (lat, lng) => {
+        return (
+          lat >= 33 &&
+          lat <= 39 && // 위도: 제주도~북한 경계
+          lng >= 124 &&
+          lng <= 132 // 경도: 서해~동해
+        );
+      };
 
       // mapObj에서 경로 좌표 추출
       if (info.mapObj) {
         const coordinates = [];
 
-        // 출발지 좌표
-        if (info.firstStartStation) {
+        // 출발지 좌표 (함수 파라미터로 전달받은 좌표 사용)
+        if (start) {
           coordinates.push({
-            lat: parseFloat(info.firstStartStation.lat),
-            lng: parseFloat(info.firstStartStation.lon),
+            lat: start.lat,
+            lng: start.lng,
           });
           console.log("📍 출발지 추가:", coordinates[0]);
         }
@@ -290,33 +409,49 @@ class TransportationService {
         if (typeof mapObjStr === "string") {
           const points = mapObjStr.split("^");
           console.log(`📍 mapObj 포인트 개수: ${points.length}`);
+
+          let validCount = 0;
+          let invalidCount = 0;
+
           points.forEach((point, idx) => {
-            const [lng, lat] = point.split(":");
-            if (lng && lat) {
-              coordinates.push({
-                lat: parseFloat(lat),
-                lng: parseFloat(lng),
-              });
-              if (idx < 3) {
-                console.log(`📍 중간 좌표 ${idx + 1}:`, {
-                  lat: parseFloat(lat),
-                  lng: parseFloat(lng),
-                });
+            const parts = point.split(":");
+            if (parts.length === 2) {
+              const lng = parseFloat(parts[0]);
+              const lat = parseFloat(parts[1]);
+
+              if (!isNaN(lng) && !isNaN(lat)) {
+                // 좌표 검증: 대한민국 영역 내의 좌표만 추가
+                if (isValidKoreaCoord(lat, lng)) {
+                  coordinates.push({ lat, lng });
+                  validCount++;
+                  if (validCount <= 3) {
+                    console.log(`📍 유효한 좌표 ${validCount}:`, { lat, lng });
+                  }
+                } else {
+                  invalidCount++;
+                  if (invalidCount <= 3) {
+                    console.log(`⚠️  범위 밖 좌표 제외:`, { lat, lng });
+                  }
+                }
               }
             }
           });
+
+          console.log(
+            `✅ 유효 좌표: ${validCount}개, 제외된 좌표: ${invalidCount}개`
+          );
         }
 
-        // 도착지 좌표
-        if (info.lastEndStation) {
+        // 도착지 좌표 (함수 파라미터로 전달받은 좌표 사용)
+        if (end) {
           coordinates.push({
-            lat: parseFloat(info.lastEndStation.lat),
-            lng: parseFloat(info.lastEndStation.lon),
+            lat: end.lat,
+            lng: end.lng,
           });
           console.log("📍 도착지 추가:", coordinates[coordinates.length - 1]);
         }
 
-        console.log(`✅ 경로 좌표 ${coordinates.length}개 파싱 완료`);
+        console.log(`✅ 최종 경로 좌표 ${coordinates.length}개 파싱 완료`);
         return { path: coordinates };
       }
 
@@ -661,20 +796,34 @@ class TransportationService {
     }
   }
 
-  // 도보 경로
+  // 도보 경로 (직선 거리 기반 계산)
   async getWalkingRoute(start, end) {
     try {
-      const distance = this.calculateDistance(
-        start.lat,
-        start.lng,
-        end.lat,
-        end.lng
-      );
+      console.log("🚶 도보 경로 계산 시작");
+      console.log(`📍 출발: (${start.lat}, ${start.lng})`);
+      console.log(`📍 도착: (${end.lat}, ${end.lng})`);
+
+      // 직선 거리 계산
+      const straightDistance = this.calculateDistance(start, end);
+
+      // 실제 도보 거리는 직선 거리의 약 1.3배 (도로를 따라 걸어야 하므로)
+      const actualDistance = Math.round(straightDistance * 1.3);
+
+      // 도보 속도: 평균 4km/h
       const walkingSpeed = 4;
-      const timeInMinutes = Math.round((distance / 1000 / walkingSpeed) * 60);
+      const timeInMinutes = Math.round(
+        (actualDistance / 1000 / walkingSpeed) * 60
+      );
+
+      console.log(`✅ 직선 거리: ${straightDistance}m`);
+      console.log(`✅ 예상 도보 거리: ${actualDistance}m (직선 × 1.3)`);
+      console.log(
+        `✅ 예상 시간: ${timeInMinutes}분 (${walkingSpeed}km/h 기준)`
+      );
 
       return {
         success: true,
+        mode: "walking",
         coordinates: { start, end },
         routes: [
           {
@@ -684,11 +833,18 @@ class TransportationService {
               payment: 0,
               busTransitCount: 0,
               subwayTransitCount: 0,
-              totalDistance: distance,
-              totalWalk: distance,
+              totalDistance: actualDistance,
+              totalWalk: actualDistance,
               totalStationCount: 0,
             },
-            subPaths: [],
+            subPaths: [
+              {
+                type: "walk",
+                trafficType: "도보",
+                distance: actualDistance,
+                sectionTime: timeInMinutes,
+              },
+            ],
             pathData: {
               path: [
                 { lat: start.lat, lng: start.lng },
