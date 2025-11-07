@@ -1,11 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ScheduleModal from "./ScheduleModal";
 
 const CalendarWeek = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // ✅ 반응형 구분
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -49,7 +51,7 @@ const CalendarWeek = () => {
       sx={{
         position: "relative",
         width: "100%",
-        maxWidth: {xs:"500px", lg:"1525px"},
+        maxWidth: { xs: "500px", lg: "1525px" },
         backgroundColor: "white",
         display: "flex",
         flexDirection: "column",
@@ -57,8 +59,8 @@ const CalendarWeek = () => {
         boxSizing: "border-box",
         margin: "0 auto",
         overflowX: "hidden", // ✅ 외부 가로 스크롤 완전 차단
-        overflowY:"hidden",
-        alignContent:"center"
+        overflowY: "hidden",
+        alignContent: "center",
       }}
     >
       {/* ✅ 시간 헤더 */}
@@ -107,9 +109,9 @@ const CalendarWeek = () => {
       <Box
         sx={{
           position: "absolute",
-          top: {xs:30 ,lg:40},
+          top: { xs: 30, lg: 40 },
           left: 0,
-          width: {xs:"99px", lg:"70px"},
+          width: { xs: "99px", lg: "70px" },
           height: "28px",
           backgroundColor: "#fff",
           zIndex: 3,
@@ -224,9 +226,14 @@ const CalendarWeek = () => {
                 {Array.from({ length: hourCount }, (_, hour) => (
                   <Box
                     key={hour}
+                    onClick={() => setModalOpen(true)}
                     sx={{
                       flex: `0 0 ${hourWidth}px`,
                       height: "100%",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.02)",
+                      },
                     }}
                   />
                 ))}
@@ -263,6 +270,9 @@ const CalendarWeek = () => {
           zIndex: 10,
         }}
       />
+
+      {/* Schedule Modal */}
+      <ScheduleModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </Box>
   );
 };

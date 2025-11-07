@@ -302,14 +302,18 @@ const Weather = () => {
           <SwipeableDrawer
             anchor="bottom"
             open={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            onOpen={() => setDrawerOpen(true)}
+            onClose={() => setDrawerOpen(true)}
+            onOpen={() => setDrawerOpen(false)}
             PaperProps={{
               sx: {
                 borderTopLeftRadius: 16,
                 borderTopRightRadius: 16,
-                minHeight: "95vh",
+                minHeight: "85vh",
                 backgroundColor: "#fff",
+                transition: "transform 0.3s ease-out",
+
+                // 👇 닫혔을 때 peek 상태 유지
+                transform: drawerOpen ? "translateY(55%)" : "translateY(70%)",
               },
             }}
           >
@@ -818,7 +822,7 @@ const Weather = () => {
             elevation={3}
             sx={{
               minWidth: 0,
-              width: "50%",
+              width: { xs: "0", md: "100%", lg: "50%" },
               backgroundColor: "#ffffffff",
               alignItems: "center",
               alignContent: "center",

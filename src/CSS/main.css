@@ -102,6 +102,11 @@
   border-right: 1px solid #000000;
   border-bottom: 1px solid #000000;
   background: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+.calendar-cell:hover {
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 @media (min-width: 0px) and (max-width: 959px) {

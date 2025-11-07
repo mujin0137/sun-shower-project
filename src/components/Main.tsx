@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
+import ScheduleModal from "./ScheduleModal";
 import "../CSS/main.css";
 
 // 새로운 월간 캘린더 컴포넌트
@@ -10,6 +11,7 @@ function MonthlyCalendar({
 }) {
   // 현재 날짜를 기본값으로 설정
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [modalOpen, setModalOpen] = useState(false);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1; // 0-11을 1-12로 변환
@@ -138,6 +140,8 @@ function MonthlyCalendar({
                 className={`calendar-cell ${
                   !day.isCurrentMonth ? "other-month" : ""
                 }`}
+                onClick={() => setModalOpen(true)}
+                style={{ cursor: "pointer" }}
               >
                 <span className="date-number">{day.date}</span>
               </div>
@@ -145,6 +149,9 @@ function MonthlyCalendar({
           </div>
         ))}
       </div>
+
+      {/* Schedule Modal */}
+      <ScheduleModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }
@@ -165,7 +172,7 @@ const Main = () => {
           md: "calc(100vh - 100px)",
           lg: "auto",
         },
-        justifyContent:"space-between"
+        justifyContent: "space-between",
       }}
     >
       {/* 왼쪽 영역 - 30% */}
@@ -222,10 +229,10 @@ const Main = () => {
       {/* 오른쪽 영역 - 70% */}
       <Box
         sx={{
-          display: { xs: "none", md: "flex",},
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           gap: { xs: "8px", md: "10px" },
-          flex: { md: "0 0 65%", lg:"0 0 68%"},
+          flex: { md: "0 0 65%", lg: "0 0 68%" },
           minWidth: 0,
         }}
       >
@@ -239,8 +246,7 @@ const Main = () => {
             transition: "height 0.2s ease",
           }}
         >
-          <MonthlyCalendar onWeeksChange={setCalendarWeeks}
-          />
+          <MonthlyCalendar onWeeksChange={setCalendarWeeks} />
         </Box>
         <Box
           sx={{

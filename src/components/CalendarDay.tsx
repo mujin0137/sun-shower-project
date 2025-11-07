@@ -1,11 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
-import { Popover } from "@mui/material";
+import ScheduleModal from "./ScheduleModal";
 
 const CalendarDay = () => {
   const startHour = 0;
@@ -13,14 +8,9 @@ const CalendarDay = () => {
   const labelWidth = 60;
   const verticalLineOffset = 42; // 세로선 오프셋 (데스크톱 84px = 70 + 14)
   const verticalLineOffsetMobile = 40; // 모바일 세로선 오프셋 (모바일 94px = 75 + 19)
-  const paddingTop = 92;
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const [eventData, setEventData] = useState({
-    start: "",
-    end: "",
-    place: "",
-  });
+  const [modalOpen, setModalOpen] = useState(false);
 
   const hours = Array.from(
     { length: endHour - startHour + 1 },
@@ -30,10 +20,6 @@ const CalendarDay = () => {
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
   }, []);
-
-  const handleChange = (key: string, value: string) => {
-    setEventData((prev) => ({ ...prev, [key]: value }));
-  };
 
   return (
     <Box
@@ -125,6 +111,7 @@ const CalendarDay = () => {
 
               {/* 가로선 */}
               <Box
+                onClick={() => setModalOpen(true)}
                 sx={{
                   flex: 1,
                   borderBottom: "1px dashed rgba(0,0,0,0.15)",
@@ -133,6 +120,9 @@ const CalendarDay = () => {
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.02)",
+                  },
                   "@media (max-width:600px)": {
                     ml: `${verticalLineOffsetMobile - 39}px`,
                   },
@@ -179,6 +169,9 @@ const CalendarDay = () => {
           },
         }}
       />
+
+      {/* Schedule Modal */}
+      <ScheduleModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </Box>
   );
 };
