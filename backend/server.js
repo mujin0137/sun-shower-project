@@ -37,7 +37,12 @@ console.log("");
 const app = express();
 
 // 미들웨어
-app.use(cors());
+app.use(
+  cors({
+    origin: true, // 모든 origin 허용 (개발용)
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -85,6 +90,8 @@ app.use((err, req, res, next) => {
 
 // 서버 시작
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 가보자 가보자~ ${PORT}`);
+  console.log(`🌐 로컬: http://localhost:${PORT}`);
+  console.log(`🌐 네트워크: http://192.168.4.218:${PORT}`);
 });

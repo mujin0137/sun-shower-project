@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ScheduleModal from "./ScheduleModal";
 import "../CSS/main.css";
 
@@ -158,6 +158,44 @@ function MonthlyCalendar({
 
 const Main = () => {
   const [calendarWeeks, setCalendarWeeks] = useState(6);
+  const [reservations, setReservations] = useState([
+    { height: 60, text: "", color: "#a29bfe" },
+  ]);
+  const [checklistItems, setChecklistItems] = useState([
+    { text: "", isChecked: false },
+  ]);
+
+  const colors = ["#a29bfe", "#ff6b6b", "#4ecdc4", "#ffd93d", "#06f79bff"];
+
+  const handleAddReservation = () => {
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    const newReservation = {
+      height: 60,
+      text: "",
+      color: randomColor,
+    };
+    setReservations([...reservations, newReservation]);
+  };
+
+  const handleAddChecklistItem = () => {
+    const newItem = {
+      text: "",
+      isChecked: false,
+    };
+    setChecklistItems([...checklistItems, newItem]);
+  };
+
+  const handleChecklistTextChange = (index: number, newText: string) => {
+    const updatedItems = [...checklistItems];
+    updatedItems[index].text = newText;
+    setChecklistItems(updatedItems);
+  };
+
+  const handleChecklistToggle = (index: number) => {
+    const updatedItems = [...checklistItems];
+    updatedItems[index].isChecked = !updatedItems[index].isChecked;
+    setChecklistItems(updatedItems);
+  };
 
   return (
     <Box
@@ -183,6 +221,9 @@ const Main = () => {
           gap: { xs: "8px", md: "10px" },
           flex: { xs: "1", md: "0 0 30%" },
           minWidth: 0,
+          height: "100%",
+          maxHeight: "100%",
+          overflow: "hidden",
         }}
       >
         {/* 상단 스케줄 */}
@@ -203,25 +244,306 @@ const Main = () => {
             flexDirection: { xs: "column", md: "row" },
             gap: { xs: "8px", md: "10px", lg: "20px" },
             flex: 1,
+            minHeight: 0,
+            overflow: "hidden",
           }}
         >
+          {/* 예약내역 */}
           <Box
             sx={{
               flex: 1,
-              backgroundColor: "blue",
+              height: "100%",
+              maxHeight: "555px",
+              display: "flex",
+              position: "relative",
+              backgroundColor: "white",
               borderRadius: "10px",
+              flexDirection: "column",
+              p: "10px",
+              boxSizing: "border-box",
+              overflow: "hidden",
             }}
           >
-            456546
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: "black",
+                fontWeight: 500,
+                textAlign: "center",
+                mb: "18px",
+                mt: "23px",
+                fontSize: 16,
+                flexShrink: 0,
+                fontFamily: "RG",
+              }}
+            >
+              예약내역
+            </Typography>
+            <Box
+              sx={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: "scroll",
+                overflowX: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                pb: "60px",
+                pr: "6px",
+                "&::-webkit-scrollbar": {
+                  width: "6px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "transparent",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "rgba(255,255,255,0.3)",
+                  borderRadius: "3px",
+                },
+              }}
+            >
+              {reservations.map((item, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    position: "relative",
+                    backgroundColor: "white",
+                    borderRadius: "7px",
+                    width: "100%",
+                    height: `${item.height}px`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "3px 3px 6px rgba(0,0,0,0.4)",
+                    fontWeight: 700,
+                    fontSize: 12,
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "11px",
+                      height: "100%",
+                      backgroundColor: item.color,
+                      borderTopLeftRadius: "10px",
+                      borderBottomLeftRadius: "10px",
+                    },
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={item.text}
+                    onChange={(e) => {
+                      const updatedReservations = [...reservations];
+                      updatedReservations[idx].text = e.target.value;
+                      setReservations(updatedReservations);
+                    }}
+                    placeholder="00:00 예약장소"
+                    style={{
+                      flex: 1,
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "transparent",
+                      fontWeight: 700,
+                      fontSize: 13,
+                      textAlign: "center",
+                      color: item.text ? "black" : "#aaa",
+                      padding: "2px 4px",
+                    }}
+                    onFocus={(e) => {
+                      e.target.select();
+                    }}
+                  />
+                </Box>
+              ))}
+            </Box>
+            <Box
+              sx={{
+                flexShrink: 0,
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                pr: "10px",
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: "10px",
+                  right: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "black",
+                  fontSize: "28px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "0.2s",
+                  "&:hover": {
+                    transform: "scale(1.2)",
+                  },
+                }}
+                onClick={handleAddReservation}
+              >
+                +
+              </Box>
+            </Box>
           </Box>
+
+          {/* 체크리스트 */}
           <Box
             sx={{
               flex: 1,
-              backgroundColor: "green",
+              height: "100%",
+              maxHeight: "555px",
+              display: "flex",
+              position: "relative",
+              backgroundColor: "white",
               borderRadius: "10px",
+              flexDirection: "column",
+              p: "12px",
+              boxSizing: "border-box",
+              overflow: "hidden",
             }}
           >
-            789789
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: "black",
+                fontWeight: 500,
+                textAlign: "center",
+                mb: "19px",
+                mt: "19px",
+                fontSize: 16,
+                flexShrink: 0,
+                fontFamily: "RG",
+              }}
+            >
+              체크리스트
+            </Typography>
+
+            <Box
+              sx={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: "auto",
+                overflowX: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+                pb: "60px",
+                "&::-webkit-scrollbar": {
+                  width: "6px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "transparent",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "rgba(255,255,255,0.3)",
+                  borderRadius: "3px",
+                },
+              }}
+            >
+              {checklistItems.map((item, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: { xs: "center", md: "flex-start" },
+                    gap: "14px",
+                    marginLeft: "20px",
+                    marginRight: "20px",
+                    width: "calc(100% - 40px)",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Box
+                    onClick={() => handleChecklistToggle(idx)}
+                    sx={{
+                      width: "20px",
+                      height: "20px",
+                      backgroundColor: item.isChecked ? "#3429c5ff" : "#ddd",
+                      borderRadius: "5px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      transition: "0.2s",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.isChecked && (
+                      <Box
+                        component="span"
+                        sx={{
+                          width: "6px",
+                          height: "10px",
+                          borderRight: "2px solid white",
+                          borderBottom: "2px solid white",
+                          transform: "rotate(45deg) translate(-1px, -1.5px)",
+                        }}
+                      />
+                    )}
+                  </Box>
+                  <input
+                    type="text"
+                    value={item.text}
+                    onChange={(e) =>
+                      handleChecklistTextChange(idx, e.target.value)
+                    }
+                    placeholder="체크리스트 내용"
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "transparent",
+                      fontWeight: 600,
+                      fontSize: "13px",
+                      color: "black",
+                      textAlign: window.innerWidth < 900 ? "center" : "left",
+                    }}
+                  />
+                </Box>
+              ))}
+            </Box>
+
+            <Box
+              sx={{
+                flexShrink: 0,
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                pr: "10px",
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: "10px",
+                  right: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "black",
+                  fontSize: "28px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "0.2s",
+                  "&:hover": {
+                    transform: "scale(1.2)",
+                  },
+                }}
+                onClick={handleAddChecklistItem}
+              >
+                +
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>

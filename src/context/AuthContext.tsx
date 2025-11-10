@@ -1,5 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
+// API 베이스 URL 동적 설정
+const API_BASE_URL = `http://${window.location.hostname}:5001`;
+
 interface User {
   id: string;
   email: string;
@@ -30,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // 로그인
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // 회원가입
   const signup = async (email: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5001/api/auth/signup", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/me", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },

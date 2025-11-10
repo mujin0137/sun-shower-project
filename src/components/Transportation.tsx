@@ -31,6 +31,9 @@ import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import "../CSS/transportation.css";
 
+// API 베이스 URL 동적 설정
+const API_BASE_URL = `http://${window.location.hostname}:5001`;
+
 declare global {
   interface Window {
     kakao: any;
@@ -191,7 +194,7 @@ const Transportation = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5001/api/transportation/directions?origin=${encodeURIComponent(
+        `${API_BASE_URL}/api/transportation/directions?origin=${encodeURIComponent(
           origin
         )}&destination=${encodeURIComponent(
           destination

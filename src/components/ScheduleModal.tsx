@@ -13,6 +13,8 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ open, onClose }) => {
   const [endTime, setEndTime] = useState("");
   const [scheduleTitle, setScheduleTitle] = useState("");
   const [scheduleContent, setScheduleContent] = useState("");
+  const [scheduleName, setScheduleName] = useState(""); // 일정 제목 (title 필드)
+  const [tripPlan, setTripPlan] = useState("여행일정 1"); // 여행일정 선택
 
   // 00:00부터 23:00까지 시간 옵션 생성
   const timeOptions = Array.from({ length: 24 }, (_, i) => {
@@ -22,6 +24,8 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ open, onClose }) => {
 
   const handleConfirm = () => {
     console.log("일정 추가:", {
+      tripPlan,
+      scheduleName,
       scheduleDate,
       startTime,
       endTime,
@@ -36,6 +40,8 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ open, onClose }) => {
     setEndTime("");
     setScheduleTitle("");
     setScheduleContent("");
+    setScheduleName("");
+    setTripPlan("여행일정 1");
   };
 
   const handleDelete = () => {
@@ -48,10 +54,14 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ open, onClose }) => {
     <Modal
       open={open}
       onClose={onClose}
-      title="일정 추가"
-      tag="여행일정 1"
+      title={scheduleName}
+      titleEditable={true}
+      onTitleChange={setScheduleName}
+      tag={tripPlan}
+      tagOptions={["여행일정 1", "여행일정 2", "여행일정 3"]}
+      onTagChange={setTripPlan}
       width={345}
-      height="400px"
+      height="450px"
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         {/* 날짜 및 시간 */}
