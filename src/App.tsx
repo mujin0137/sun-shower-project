@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Aside from "./common/aside";
+import Mobilebar from "./common/Mobilebar";
 import Main from "./components/Main";
 import Calendar from "./components/Calendar";
 import CalendarDay from "./components/CalendarDay";
@@ -61,6 +62,9 @@ const AppContent = () => {
             <Route path="/transportation" element={<Transportation />} />
           </Routes>
         </main>
+      </div>
+      <div className="mobbar">
+        <Mobilebar />
       </div>
     </div>
   );

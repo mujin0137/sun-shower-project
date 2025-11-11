@@ -308,13 +308,13 @@ const Main = () => {
                   sx={{
                     position: "relative",
                     backgroundColor: "white",
-                    borderRadius: "7px",
+                    borderRadius: "10px",
                     width: "100%",
                     height: `${item.height}px`,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "3px 3px 6px rgba(0,0,0,0.4)",
+                    boxShadow: "0 3px 6px rgba(0,0,0,0.4)",
                     fontWeight: 700,
                     fontSize: 12,
                     overflow: "hidden",
@@ -454,7 +454,7 @@ const Main = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: { xs: "center", md: "flex-start" },
-                    gap: "14px",
+                    gap: "11px",
                     marginLeft: "20px",
                     marginRight: "20px",
                     width: "calc(100% - 40px)",
@@ -466,7 +466,7 @@ const Main = () => {
                     sx={{
                       width: "20px",
                       height: "20px",
-                      backgroundColor: item.isChecked ? "#3429c5ff" : "#ddd",
+                      backgroundColor: item.isChecked ? "#555396" : "#ddd",
                       borderRadius: "5px",
                       display: "flex",
                       alignItems: "center",
@@ -474,6 +474,7 @@ const Main = () => {
                       cursor: "pointer",
                       transition: "0.2s",
                       flexShrink: 0,
+                      marginLeft: "9px",
                     }}
                   >
                     {item.isChecked && (
@@ -561,8 +562,10 @@ const Main = () => {
         <Box
           sx={{
             height:
-              calendarWeeks === 5
-                ? { md: "565px", lg: "565px" }
+              calendarWeeks === 4
+                ? { md: "475px", lg: "475px" }
+                : calendarWeeks === 5
+                ? { md: "575px", lg: "575px" }
                 : { md: "655px", lg: "655px" },
             minWidth: "100%",
             transition: "height 0.2s ease",
@@ -574,8 +577,10 @@ const Main = () => {
           sx={{
             width: "100%",
             height:
-              calendarWeeks === 5
-                ? { md: "185px", lg: "215px" }
+              calendarWeeks === 4
+                ? { md: "275px", lg: "305px" }
+                : calendarWeeks === 5
+                ? { md: "195px", lg: "205px" }
                 : { md: "105px", lg: "127px" },
             backgroundColor: "yellow",
             borderRadius: "10px",
