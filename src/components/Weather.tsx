@@ -63,6 +63,7 @@ interface WeatherDetail {
     windDeg: number;
     clouds: number;
   };
+  alert: string;
 }
 
 interface HourlyForecast {
@@ -357,7 +358,7 @@ const Weather = () => {
                     p: 3,
                     mb: 2,
                     background: "transparent",
-                    color: "balck",
+                    color: "black",
                     boxShadow: "none",
                     display: "flex",
                     flexDirection: "column",
@@ -482,7 +483,7 @@ const Weather = () => {
                             textOverflow: "ellipsis",
                           }}
                         >
-                          대기정체에 주의하세요.
+                          {currentWeather.alert}
                         </Typography>
                         {/*최고/최저온도*/}
                         <Typography
@@ -753,7 +754,6 @@ const Weather = () => {
                       })}
                     </Box>
                   </Paper>
-
                   {/* 주간 예보 */}
                   {/* 주간 예보 */}
                   {dailyForecast.map((day, index) => (
@@ -948,7 +948,7 @@ const Weather = () => {
                       textOverflow: "ellipsis",
                     }}
                   >
-                    대기정체에 주의하세요.
+                    {currentWeather.alert}
                   </Typography>
                   {/*최고/최저온도*/}
                   <Typography
