@@ -65,6 +65,8 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/weather", require("./routes/weather"));
 app.use("/api/transportation", require("./routes/transportation"));
 app.use("/api/favorites", require("./routes/favorites"));
+app.use("/api/schedules", require("./routes/schedules"));
+app.use("/api/share", require("./routes/share"));
 
 // 기본 라우트
 app.get("/", (req, res) => {

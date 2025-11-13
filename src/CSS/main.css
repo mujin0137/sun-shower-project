@@ -98,6 +98,7 @@
 
 .calendar-cell {
   min-height: 78px;
+  max-height: 120px;
   padding: 8px;
   border-right: 1px solid #000000;
   border-bottom: 1px solid #000000;
@@ -154,4 +155,14 @@
   .date-number {
     font-size: 13px;
   }
+}
+
+/* 일정 목록 스크롤바 스타일 */
+.schedule-list {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.schedule-list::-webkit-scrollbar {
+  display: none;
 }

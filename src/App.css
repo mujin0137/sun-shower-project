@@ -8,6 +8,20 @@
   box-sizing: border-box;
 }
 
+@media (max-width: 899px) {
+  .app-container {
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 10;
+    padding: 0;
+  }
+  .mobbar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+}
+
 /* @media (min-width: 1200px) {
   .app-container {
     padding: 44px 80px;
