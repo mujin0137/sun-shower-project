@@ -218,6 +218,68 @@ class WeatherService {
     }
   }
 
+  // 날씨 경고 판단 로직
+  getWeatherAlert(data) {
+    const weatherId = data.weather[0].id;
+    const windSpeed = data.wind.speed;
+    const visibility = data.visibility;
+    const rain = data.rain?.["3h"] || data.rain?.["1h"] || 0;
+    const snow = data.snow?.["3h"] || data.snow?.["1h"] || 0;
+    const humidity = data.main.humidity;
+
+    // 우선순위 순으로 체크
+    // 1. 집중호우 (weather id 500-531: 비, 강수량 > 15mm/h)
+    if ((weatherId >= 502 && weatherId <= 531) || rain > 15) {
+      return "집중호우에 주의하세요.";
+    }
+
+    // 2. 폭설 (weather id 600-622: 눈, 적설량 > 5cm/h)
+    if ((weatherId >= 602 && weatherId <= 622) || snow > 5) {
+      return "폭설에 주의하세요.";
+    }
+
+    // 3. 뇌우/천둥번개 (weather id 200-232)
+    if (weatherId >= 200 && weatherId <= 232) {
+      return "천둥·번개에 주의하세요.";
+    }
+
+    // 4. 강풍 (풍속 > 14m/s)
+    if (windSpeed > 14) {
+      return "강풍에 주의하세요.";
+    }
+
+    // 5. 안개 (weather id 700-781, 가시거리 < 1km)
+    if ((weatherId >= 701 && weatherId <= 741) || visibility < 1000) {
+      return "짙은 안개에 주의하세요.";
+    }
+
+    // 6. 폭염 (기온 > 33°C, 습도 > 40%)
+    if (data.main.temp > 33 && humidity > 40) {
+      return "폭염에 주의하세요.";
+    }
+
+    // 7. 한파 (기온 < -12°C)
+    if (data.main.temp < -12) {
+      return "한파에 주의하세요.";
+    }
+
+    // 8. 비/눈 (weather id 300-531, 600-622)
+    if (
+      (weatherId >= 300 && weatherId <= 531) ||
+      (weatherId >= 600 && weatherId <= 622)
+    ) {
+      return "우산을 챙기세요.";
+    }
+
+    // 9. 미세먼지/대기질 (가시거리 < 5km, 구름 > 80%)
+    if (visibility < 5000 && data.clouds.all > 80) {
+      return "대기정체에 주의하세요.";
+    }
+
+    // 10. 기본 메시지 (맑음/보통)
+    return "기분 좋은 날씨에요.";
+  }
+
   // 날씨 데이터 포맷팅 (OpenWeatherMap API 응답)
   formatWeatherData(data, locationName, lat, lon) {
     return {
@@ -253,6 +315,7 @@ class WeatherService {
         sunrise: new Date(data.sys.sunrise * 1000).toISOString(),
         sunset: new Date(data.sys.sunset * 1000).toISOString(),
       },
+      alert: this.getWeatherAlert(data),
       timestamp: new Date(data.dt * 1000).toISOString(),
     };
   }

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/database");
 
 // 환경 변수 로드
@@ -36,9 +37,15 @@ console.log("");
 const app = express();
 
 // 미들웨어
-app.use(cors());
+app.use(
+  cors({
+    origin: true, // 모든 origin 허용 (개발용)
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // 모든 요청 로깅 (디버깅용)
 app.use((req, res, next) => {
@@ -54,9 +61,12 @@ connectDB().catch((err) => {
 });
 
 // 라우트
+app.use("/api/auth", require("./routes/auth"));
 app.use("/api/weather", require("./routes/weather"));
 app.use("/api/transportation", require("./routes/transportation"));
 app.use("/api/favorites", require("./routes/favorites"));
+app.use("/api/schedules", require("./routes/schedules"));
+app.use("/api/share", require("./routes/share"));
 
 // 기본 라우트
 app.get("/", (req, res) => {
@@ -82,6 +92,8 @@ app.use((err, req, res, next) => {
 
 // 서버 시작
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 가보자 가보자~ ${PORT}`);
+  console.log(`🌐 로컬: http://localhost:${PORT}`);
+  console.log(`🌐 네트워크: http://192.168.4.218:${PORT}`);
 });
