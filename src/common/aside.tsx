@@ -3,6 +3,7 @@ import {
   CalendarMonth,
   WbSunny,
   DirectionsBus,
+  HelpOutline,
   // Home,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +23,7 @@ const Aside = () => {
     { text: "캘린더", icon: <CalendarMonth />, path: "/calendar" },
     { text: "날씨", icon: <WbSunny />, path: "/weather" },
     { text: "교통", icon: <DirectionsBus />, path: "/transportation" },
+    { text: "고객센터", icon: <HelpOutline />, path: "/support" },
   ];
   const handleLogoClick = () => {
     navigate("/");

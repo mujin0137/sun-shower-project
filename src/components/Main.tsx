@@ -343,19 +343,7 @@ function MonthlyCalendar({
                 >
                   <span className="date-number">{day.date}</span>
                   {/* 일정 목록 표시 */}
-                  <div
-                    style={{
-                      marginTop: "4px",
-                      display: "flex",
-                      flexDirection: "column",
-                      maxWidth: "100px",
-                      maxHeight: "44px",
-                      overflowY: "auto",
-                      overflowX: "hidden",
-                      paddingRight: "2px",
-                    }}
-                    className="schedule-list"
-                  >
+                  <div className="schedule-list">
                     {daySchedules.map((schedule) => (
                       <ScheduleItem
                         key={schedule._id}
@@ -469,7 +457,9 @@ const Main = () => {
       text: "",
       color: randomColor,
     };
-    setReservations([...reservations, newReservation]);
+    const updatedReservations = [...reservations, newReservation];
+    setReservations(updatedReservations);
+    localStorage.setItem("reservations", JSON.stringify(updatedReservations));
   };
 
   const handleAddChecklistItem = () => {
@@ -477,63 +467,43 @@ const Main = () => {
       text: "",
       isChecked: false,
     };
-    setChecklistItems([...checklistItems, newItem]);
+    const updatedItems = [...checklistItems, newItem];
+    setChecklistItems(updatedItems);
+    localStorage.setItem("checklistItems", JSON.stringify(updatedItems));
   };
 
   const handleChecklistTextChange = (index: number, newText: string) => {
     const updatedItems = [...checklistItems];
     updatedItems[index].text = newText;
     setChecklistItems(updatedItems);
+    localStorage.setItem("checklistItems", JSON.stringify(updatedItems));
   };
 
   const handleChecklistToggle = (index: number) => {
     const updatedItems = [...checklistItems];
     updatedItems[index].isChecked = !updatedItems[index].isChecked;
     setChecklistItems(updatedItems);
-  };
-
-  // 예약내역 저장
-  const handleSaveReservations = () => {
-    try {
-      localStorage.setItem("reservations", JSON.stringify(reservations));
-      alert("예약내역이 저장되었습니다!");
-    } catch (error) {
-      console.error("저장 오류:", error);
-      alert("저장 중 오류가 발생했습니다.");
-    }
-  };
-
-  // 체크리스트 저장
-  const handleSaveChecklist = () => {
-    try {
-      localStorage.setItem("checklistItems", JSON.stringify(checklistItems));
-      alert("체크리스트가 저장되었습니다!");
-    } catch (error) {
-      console.error("저장 오류:", error);
-      alert("저장 중 오류가 발생했습니다.");
-    }
+    localStorage.setItem("checklistItems", JSON.stringify(updatedItems));
   };
 
   // 예약내역 개별 삭제
   const handleDeleteReservation = (index: number) => {
     const updatedReservations = reservations.filter((_, idx) => idx !== index);
-    // 최소 1개는 유지
-    if (updatedReservations.length === 0) {
-      setReservations([{ height: 60, text: "", color: "#a29bfe" }]);
-    } else {
-      setReservations(updatedReservations);
-    }
+    const finalReservations = updatedReservations.length === 0
+      ? [{ height: 60, text: "", color: "#a29bfe" }]
+      : updatedReservations;
+    setReservations(finalReservations);
+    localStorage.setItem("reservations", JSON.stringify(finalReservations));
   };
 
   // 체크리스트 개별 삭제
   const handleDeleteChecklistItem = (index: number) => {
     const updatedItems = checklistItems.filter((_, idx) => idx !== index);
-    // 최소 1개는 유지
-    if (updatedItems.length === 0) {
-      setChecklistItems([{ text: "", isChecked: false }]);
-    } else {
-      setChecklistItems(updatedItems);
-    }
+    const finalItems = updatedItems.length === 0
+      ? [{ text: "", isChecked: false }]
+      : updatedItems;
+    setChecklistItems(finalItems);
+    localStorage.setItem("checklistItems", JSON.stringify(finalItems));
   };
 
   // 페이지 로드 시 저장된 데이터 불러오기
@@ -877,6 +847,7 @@ const Main = () => {
                       const updatedReservations = [...reservations];
                       updatedReservations[idx].text = e.target.value;
                       setReservations(updatedReservations);
+                      localStorage.setItem("reservations", JSON.stringify(updatedReservations));
                     }}
                     placeholder="00:00 예약장소"
                     style={{
@@ -927,31 +898,11 @@ const Main = () => {
                 height: "36px",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
                 pr: "10px",
                 pl: "10px",
               }}
             >
-              <Box
-                onClick={handleSaveReservations}
-                sx={{
-                  position: "absolute",
-                  bottom: "10px",
-                  left: "16px",
-                  padding: "4px 12px",
-                  backgroundColor: "#A3D8F4",
-                  color: "white",
-                  borderRadius: "5px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  "&:hover": {
-                    backgroundColor: "#81c7ec",
-                  },
-                }}
-              >
-                저장
-              </Box>
               <Box
                 sx={{
                   position: "absolute",
@@ -1125,31 +1076,11 @@ const Main = () => {
                 height: "36px",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
                 pr: "10px",
                 pl: "10px",
               }}
             >
-              <Box
-                onClick={handleSaveChecklist}
-                sx={{
-                  position: "absolute",
-                  bottom: "10px",
-                  left: "16px",
-                  padding: "4px 12px",
-                  backgroundColor: "#A3D8F4",
-                  color: "white",
-                  borderRadius: "5px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  "&:hover": {
-                    backgroundColor: "#81c7ec",
-                  },
-                }}
-              >
-                저장
-              </Box>
               <Box
                 sx={{
                   position: "absolute",

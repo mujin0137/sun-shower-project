@@ -144,7 +144,7 @@ const Calendar = () => {
             <Typography
               sx={{
                 fontFamily: "Romanticgumi",
-                fontSize: "13px",
+                fontSize: "18px",
                 minWidth: 80,
                 textAlign: "center",
               }}

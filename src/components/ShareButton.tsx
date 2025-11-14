@@ -124,27 +124,29 @@ const ShareButton: React.FC<ShareButtonProps> = ({
 
   return (
     <>
-      <Button
-        variant="contained"
+      <button
         // startIcon={<ShareRounded />}
         onClick={handleOpen}
-        sx={{
+        style={{
           backgroundColor: "#A3D8F4",
-          color: "#fff",
-          fontFamily: "RG",
+          border: "none",
+          width: "60px",
+          height: "25px",
+          color: "#000",
+          fontFamily: "Pretendard",
           fontSize: "14px",
           fontWeight: "600",
           textTransform: "none",
           borderRadius: "8px",
           // padding: "8px 16px",
           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-          "&:hover": {
-            backgroundColor: "#80C2E8",
-          },
+          // "&:hover": {
+          //   backgroundColor: "#80C2E8",
+          // },
         }}
       >
         공유
-      </Button>
+      </button>
 
       <Dialog
         open={open}
@@ -231,7 +233,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
 
               <Typography
                 sx={{
-                  fontFamily: "RG",
+                  fontFamily: "Pretendard",
                   fontSize: "14px",
                   color: "#666",
                   marginBottom: "16px",
@@ -253,7 +255,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
                 }}
                 sx={{
                   "& .MuiInputBase-root": {
-                    fontFamily: "RG",
+                    fontFamily: "Pretendard",
                     fontSize: "13px",
                   },
                 }}
@@ -261,7 +263,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
 
               <Typography
                 sx={{
-                  fontFamily: "RG",
+                  fontFamily: "Pretendard",
                   fontSize: "12px",
                   color: "#999",
                   marginTop: "12px",
@@ -277,7 +279,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
           <Button
             onClick={handleClose}
             sx={{
-              fontFamily: "RG",
+              fontFamily: "Pretendard",
               color: "#666",
               textTransform: "none",
             }}
@@ -289,7 +291,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
             variant="contained"
             disabled={loading}
             sx={{
-              fontFamily: "RG",
+              fontFamily: "Pretendard",
               backgroundColor: "#63a465",
               textTransform: "none",
               "&:hover": {
@@ -304,7 +306,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
             variant="outlined"
             disabled={!shareUrl}
             sx={{
-              fontFamily: "RG",
+              fontFamily: "Pretendard",
               textTransform: "none",
             }}
           >
@@ -322,7 +324,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
         <Alert
           onClose={() => setSnackbarOpen(false)}
           severity={snackbarSeverity}
-          sx={{ fontFamily: "RG" }}
+          sx={{ fontFamily: "Pretendard" }}
         >
           {snackbarMessage}
         </Alert>

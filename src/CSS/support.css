@@ -1,0 +1,350 @@
+/* Support Page Styles */
+
+.support-page {
+  width: 100%;
+  height: 790px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+}
+
+.support-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.support-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  /* background: linear-gradient(135deg, #a3d8f4 0%, #555396 100%); */
+  background-color: #a3d8f4;
+  border-radius: 20px;
+  color: white;
+}
+
+.support-header-icon {
+  font-size: 64px !important;
+  margin-bottom: 16px;
+}
+
+.support-title {
+  font-family: "RG", "Pretendard", sans-serif;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px !important;
+  color: white !important;
+}
+
+.support-subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Section Titles */
+.section-title {
+  font-family: "RG", "Pretendard", sans-serif;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  margin-bottom: 20px !important;
+  color: #000;
+}
+
+/* Quick Help Section */
+.quick-help-section {
+  margin-bottom: 50px;
+}
+
+.quick-help-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.help-card {
+  border-radius: 15px !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.help-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.help-card-content {
+  text-align: center;
+  padding: 30px 20px !important;
+}
+
+.help-card-icon {
+  font-size: 48px !important;
+  color: #a3d8f4;
+  margin-bottom: 16px;
+}
+
+.help-card-title {
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+  color: #000;
+}
+
+.help-card-description {
+  color: #666;
+  font-size: 14px;
+}
+
+/* FAQ Section */
+.faq-section {
+  margin-bottom: 50px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-accordion {
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  margin-bottom: 0 !important;
+}
+
+.faq-accordion:before {
+  display: none !important;
+}
+
+.faq-summary {
+  background-color: #fff !important;
+  border-radius: 10px !important;
+}
+
+.faq-question {
+  font-weight: 600;
+  color: #000;
+  font-size: 15px;
+}
+
+.faq-details {
+  background-color: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.faq-answer {
+  color: #555;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* Contact Section */
+.contact-section {
+  margin-bottom: 40px;
+}
+
+.contact-card {
+  border-radius: 15px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field {
+  background-color: #fff;
+}
+
+.submit-button {
+  margin-top: 20px !important;
+  padding: 12px !important;
+  background: linear-gradient(135deg, #a3d8f4 0%, #555396 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  border-radius: 10px !important;
+  text-transform: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(163, 216, 244, 0.4) !important;
+}
+
+.success-message {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-text {
+  color: #63a465;
+  font-weight: 600 !important;
+  margin-bottom: 12px !important;
+}
+
+.success-subtext {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Contact Info Section */
+.contact-info-section {
+  text-align: center;
+}
+
+.contact-info-cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 200px;
+  max-width: 280px;
+  box-sizing: border-box;
+}
+
+.info-icon {
+  font-size: 32px !important;
+  color: #a3d8f4;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  text-align: left;
+}
+
+.business-hours {
+  color: #666;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 899px) {
+  .support-page {
+    padding: 8px;
+    overflow-x: hidden;
+  }
+
+  .support-container {
+    padding: 8px;
+    max-width: 100%;
+  }
+
+  .support-header {
+    padding: 30px 16px;
+    margin-bottom: 30px;
+  }
+
+  .support-header-icon {
+    font-size: 48px !important;
+  }
+
+  .support-title {
+    font-size: 24px !important;
+  }
+
+  .support-subtitle {
+    font-size: 14px;
+  }
+
+  .section-title {
+    font-size: 18px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .quick-help-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .help-card-content {
+    padding: 24px 16px !important;
+  }
+
+  .help-card-icon {
+    font-size: 40px !important;
+  }
+
+  .contact-info-cards {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .info-item {
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+  }
+
+  .faq-question {
+    font-size: 14px;
+  }
+
+  .faq-answer {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1279px) {
+  .support-container {
+    max-width: 900px;
+  }
+
+  .quick-help-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .support-header-icon {
+    font-size: 56px !important;
+  }
+
+  .support-title {
+    font-size: 28px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .support-container {
+    max-width: 1200px;
+  }
+}
+
+/* Scrollbar Styling - 숨기기 */
+.support-page::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.support-page {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}

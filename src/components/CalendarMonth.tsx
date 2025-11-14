@@ -245,6 +245,7 @@ function MonthlyCalendar({
                       overflowY: "auto",
                       overflowX: "hidden",
                       paddingRight: "2px",
+                      boxSizing: "border-box",
                     }}
                     className="schedule-list"
                   >
@@ -373,10 +374,10 @@ const CalendarMonth = () => {
           sx={{
             height:
               calendarWeeks === 4
-                ? { md: "475px", lg: "366px" }
+                ? { md: "475px", lg: "400px" }
                 : calendarWeeks === 5
-                ? { md: "575px", lg: "448px" }
-                : { md: "655px", lg: "530px" },
+                ? { md: "575px", lg: "490px" }
+                : { md: "655px", lg: "580px" },
             minWidth: "100%",
             transition: "height 0.2s ease",
             alignContent: "center",
@@ -450,6 +451,7 @@ const CalendarMonth = () => {
                   key={schedule._id}
                   sx={{
                     width: "96%",
+
                     minHeight: "33px",
                     maxHeight: "33px",
                     display: "flex",
@@ -481,7 +483,7 @@ const CalendarMonth = () => {
                       justifyContent: "center",
                       fontSize: "11px",
                       fontWeight: "600",
-                      padding: "4px 2px",
+                      padding: "4px 30px",
                       boxSizing: "border-box",
                     }}
                   >

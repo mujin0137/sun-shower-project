@@ -5,7 +5,7 @@ import {
   CalendarMonthRounded,
   FreeCancellationRounded,
   ChecklistRounded,
-  TuneRounded,
+  HelpOutlineRounded,
   HomeOutlined,
 } from "@mui/icons-material";
 
@@ -41,10 +41,10 @@ const Mobilebar = () => {
             체크리스트
           </Link>
         </li>
-        <li className={isActive("/setting") ? "active" : ""}>
-          <Link to="/setting">
-            <TuneRounded />
-            설정
+        <li className={isActive("/support") ? "active" : ""}>
+          <Link to="/support">
+            <HelpOutlineRounded />
+            고객센터
           </Link>
         </li>
       </ul>

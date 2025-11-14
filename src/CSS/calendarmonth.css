@@ -100,12 +100,17 @@
 }
 
 .calendar-cell2 {
-  min-height: 65px;
+  min-height: 90px;
+  max-height: 90px;
   padding: 8px;
   border-right: 1px solid #000000;
   border-bottom: 1px solid #000000;
   background: #ffffff;
   transition: background-color 0.2s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .calendar-cell2:hover {
@@ -114,14 +119,16 @@
 
 @media (min-width: 0px) and (max-width: 959px) {
   .calendar-cell2 {
-    min-height: 70px;
+    min-height: 85px;
+    max-height: 85px;
     padding: 5px;
   }
 }
 
 @media (min-width: 960px) and (max-width: 1279px) {
   .calendar-cell2 {
-    min-height: 55px;
+    min-height: 80px;
+    max-height: 80px;
     padding: 6px;
   }
 }
@@ -145,6 +152,7 @@
   font-weight: 400;
   color: #000000;
   text-align: left;
+  flex-shrink: 0;
 }
 
 @media (min-width: 0px) and (max-width: 959px) {
@@ -157,4 +165,16 @@
   .date-number {
     font-size: 13px;
   }
+}
+
+/* 일정 목록 스크롤바 숨기기 */
+.schedule-list {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  flex: 1;
+  min-height: 0;
+}
+
+.schedule-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

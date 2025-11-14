@@ -97,13 +97,17 @@
 }
 
 .calendar-cell {
-  min-height: 78px;
-  max-height: 120px;
+  min-height: 90px;
+  max-height: 90px;
   padding: 8px;
   border-right: 1px solid #000000;
   border-bottom: 1px solid #000000;
   background: #ffffff;
   transition: background-color 0.2s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .calendar-cell:hover {
@@ -112,14 +116,16 @@
 
 @media (min-width: 0px) and (max-width: 959px) {
   .calendar-cell {
-    min-height: 62px;
+    min-height: 85px;
+    max-height: 85px;
     padding: 5px;
   }
 }
 
 @media (min-width: 960px) and (max-width: 1279px) {
   .calendar-cell {
-    min-height: 70px;
+    min-height: 80px;
+    max-height: 80px;
     padding: 6px;
   }
 }
@@ -143,6 +149,7 @@
   font-weight: 400;
   color: #000000;
   text-align: left;
+  flex-shrink: 0;
 }
 
 @media (min-width: 0px) and (max-width: 959px) {
@@ -159,8 +166,19 @@
 
 /* 일정 목록 스크롤바 스타일 */
 .schedule-list {
+  margin-top: 2px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  flex: 1;
+  min-height: 0;
+  gap: 2px;
 }
 
 .schedule-list::-webkit-scrollbar {

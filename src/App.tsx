@@ -19,11 +19,14 @@ import CalendarWeek from "./components/CalendarWeek";
 import CalendarMonth from "./components/CalendarMonth";
 import Weather from "./components/Weather";
 import Transportation from "./components/Transportation";
+import Support from "./components/Support";
+import Checklist from "./components/Checklist";
+import Booking from "./components/Booking";
 import "./App.css";
 
 const AppContent = () => {
   const location = useLocation();
-  const hideTabsPages = ["/weather", "/transportation"];
+  const hideTabsPages = ["/weather", "/transportation", "/support", "/booking"];
   const shouldHideTabs = hideTabsPages.includes(location.pathname);
 
   return (
@@ -60,6 +63,9 @@ const AppContent = () => {
             </Route>
             <Route path="/weather" element={<Weather />} />
             <Route path="/transportation" element={<Transportation />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/checklist" element={<Checklist />} />
+            <Route path="/booking" element={<Booking />} />
           </Routes>
         </main>
       </div>

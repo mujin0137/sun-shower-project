@@ -39,18 +39,21 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: { xs: "2px", sm: "4px" },
+        gap: { xs: "3px", sm: "4px" },
         backgroundColor: getBackgroundColor(),
         borderRadius: "10px",
-        padding: { xs: "3px 6px", sm: "4px 8px" },
-        marginBottom: { xs: "3px", sm: "4px" },
+        padding: { xs: "6px 8px", sm: "4px 10px" },
+        marginBottom: { xs: "4px", sm: "5px" },
+        minHeight: { xs: "24px", sm: "26px" },
         cursor: onClick ? "pointer" : "default",
-        fontSize: { xs: "0.62rem", sm: "0.7rem", md: "0.75rem" },
+        fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
         color: "#fff",
         fontWeight: "500",
         width: "100%",
+        maxWidth: "100%",
         minWidth: 0,
         boxSizing: "border-box",
+        overflow: "hidden",
         "&:hover": {
           opacity: onClick ? 0.9 : 1,
         },
@@ -68,6 +71,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
           textOverflow: "ellipsis",
           flexShrink: 1,
           minWidth: 0,
+          fontSize: { xs: "11px", sm: "11.5px" },
         }}
       >
         {startTime}
@@ -76,7 +80,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
       {/* 일정 제목 */}
 
       {/* 종료 시간 (있는 경우) */}
-      {endTime && (
+      {/* {endTime && (
         <Box
           component="span"
           sx={{
@@ -85,14 +89,16 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({
             textOverflow: "ellipsis",
             flexShrink: 1,
             minWidth: 0,
+            fontSize: "10px",
           }}
         >
           ~{endTime}
         </Box>
-      )}
+      )} */}
       <Box
         component="span"
         sx={{
+          textAlign: "center",
           flex: 1,
           minWidth: 0,
           overflow: "hidden",

@@ -1,7 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Box, TextField, Button, Typography, Alert } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Checkbox,
+  FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormGroup,
+} from "@mui/material";
 import { useAuth } from "../context/AuthContext";
+import TermsOfService from "./TermsOfService";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -13,9 +28,51 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 약관 동의 상태
+  const [agreeAll, setAgreeAll] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+
+  // 모달 상태
+  const [termsModalOpen, setTermsModalOpen] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+
+  // 전체 동의 처리
+  const handleAgreeAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setAgreeAll(checked);
+    setAgreeTerms(checked);
+    setAgreePrivacy(checked);
+  };
+
+  // 개별 약관 동의 처리
+  const handleAgreeTerms = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAgreeTerms(e.target.checked);
+    if (!e.target.checked) {
+      setAgreeAll(false);
+    } else if (agreePrivacy) {
+      setAgreeAll(true);
+    }
+  };
+
+  const handleAgreePrivacy = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAgreePrivacy(e.target.checked);
+    if (!e.target.checked) {
+      setAgreeAll(false);
+    } else if (agreeTerms) {
+      setAgreeAll(true);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // 약관 동의 확인
+    if (!agreeTerms || !agreePrivacy) {
+      setError("필수 약관에 모두 동의해주세요.");
+      return;
+    }
 
     // 비밀번호 확인
     if (password !== confirmPassword) {
@@ -56,7 +113,7 @@ const Signup = () => {
       <Box
         sx={{
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 450,
           backgroundColor: "white",
           borderRadius: 2,
           padding: 4,
@@ -122,7 +179,7 @@ const Signup = () => {
             required
             margin="normal"
             autoComplete="new-password"
-            helperText="최소 6자 이상"
+            helperText="최소 4자 이상"
           />
 
           <TextField
@@ -135,6 +192,117 @@ const Signup = () => {
             margin="normal"
             autoComplete="new-password"
           />
+
+          {/* 약관 동의 섹션 */}
+          <Box
+            sx={{
+              marginTop: 3,
+              padding: 2,
+              backgroundColor: "#FAFAFA",
+              borderRadius: 1,
+              border: "1px solid #E0E0E0",
+            }}
+          >
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={agreeAll}
+                    onChange={handleAgreeAll}
+                    sx={{
+                      color: "#A3D8F4",
+                      "&.Mui-checked": { color: "#A3D8F4" },
+                    }}
+                  />
+                }
+                label={
+                  <Typography sx={{ fontWeight: "600", fontSize: "15px" }}>
+                    전체 동의
+                  </Typography>
+                }
+              />
+
+              <Box sx={{ marginLeft: 2, marginTop: 1 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={agreeTerms}
+                      onChange={handleAgreeTerms}
+                      sx={{
+                        color: "#A3D8F4",
+                        "&.Mui-checked": { color: "#A3D8F4" },
+                      }}
+                    />
+                  }
+                  label={
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                      }}
+                    >
+                      <Typography sx={{ fontSize: "14px" }}>
+                        [필수] 서비스 이용약관 동의
+                      </Typography>
+                      <Button
+                        size="small"
+                        onClick={() => setTermsModalOpen(true)}
+                        sx={{
+                          minWidth: "auto",
+                          padding: "2px 6px",
+                          fontSize: "12px",
+                          color: "#666",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        보기
+                      </Button>
+                    </Box>
+                  }
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={agreePrivacy}
+                      onChange={handleAgreePrivacy}
+                      sx={{
+                        color: "#A3D8F4",
+                        "&.Mui-checked": { color: "#A3D8F4" },
+                      }}
+                    />
+                  }
+                  label={
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                      }}
+                    >
+                      <Typography sx={{ fontSize: "14px" }}>
+                        [필수] 개인정보 처리방침 동의
+                      </Typography>
+                      <Button
+                        size="small"
+                        onClick={() => setPrivacyModalOpen(true)}
+                        sx={{
+                          minWidth: "auto",
+                          padding: "2px 6px",
+                          fontSize: "12px",
+                          color: "#666",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        보기
+                      </Button>
+                    </Box>
+                  }
+                />
+              </Box>
+            </FormGroup>
+          </Box>
 
           <Button
             type="submit"
@@ -171,6 +339,78 @@ const Signup = () => {
           </Typography>
         </Box>
       </Box>
+
+      {/* 이용약관 모달 */}
+      <Dialog
+        open={termsModalOpen}
+        onClose={() => setTermsModalOpen(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            maxHeight: "80vh",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            backgroundColor: "#A3D8F4",
+            color: "white",
+            fontWeight: "bold",
+          }}
+        >
+          서비스 이용약관
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            paddingTop: "0 !important",
+            overflowY: "auto",
+          }}
+        >
+          <TermsOfService />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setTermsModalOpen(false)} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* 개인정보처리방침 모달 */}
+      <Dialog
+        open={privacyModalOpen}
+        onClose={() => setPrivacyModalOpen(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            maxHeight: "80vh",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            backgroundColor: "#A3D8F4",
+            color: "white",
+            fontWeight: "bold",
+          }}
+        >
+          개인정보 처리방침
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            paddingTop: "0 !important",
+            overflowY: "auto",
+          }}
+        >
+          <PrivacyPolicy />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPrivacyModalOpen(false)} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

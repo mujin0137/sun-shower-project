@@ -73,7 +73,9 @@ const CalendarWeek = () => {
   const headerRef = useRef<HTMLDivElement | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | undefined>(undefined);
+  const [selectedSchedule, setSelectedSchedule] = useState<
+    Schedule | undefined
+  >(undefined);
 
   // ✅ 반응형 구분 (원본 그대로)
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -117,8 +119,14 @@ const CalendarWeek = () => {
       const startDate = weekDates[0];
       const endDate = weekDates[6];
 
-      const startDateString = `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, "0")}-${startDate.getDate().toString().padStart(2, "0")}`;
-      const endDateString = `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, "0")}-${endDate.getDate().toString().padStart(2, "0")}`;
+      const startDateString = `${startDate.getFullYear()}-${(
+        startDate.getMonth() + 1
+      )
+        .toString()
+        .padStart(2, "0")}-${startDate.getDate().toString().padStart(2, "0")}`;
+      const endDateString = `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${endDate.getDate().toString().padStart(2, "0")}`;
 
       const response = await fetch(
         `http://${window.location.hostname}:5001/api/schedules?startDate=${startDateString}&endDate=${endDateString}`,
@@ -180,9 +188,15 @@ const CalendarWeek = () => {
   // 일정이 해당 요일에 속하는지 확인
   const getSchedulesForDay = (dayIndex: number) => {
     const targetDate = weekDates[dayIndex];
-    const targetDateString = `${targetDate.getFullYear()}-${(targetDate.getMonth() + 1).toString().padStart(2, "0")}-${targetDate.getDate().toString().padStart(2, "0")}`;
+    const targetDateString = `${targetDate.getFullYear()}-${(
+      targetDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${targetDate.getDate().toString().padStart(2, "0")}`;
 
-    return schedules.filter((schedule) => schedule.scheduleDate === targetDateString);
+    return schedules.filter(
+      (schedule) => schedule.scheduleDate === targetDateString
+    );
   };
 
   // ✅ 스크롤 동기화 (원본 그대로)
@@ -422,7 +436,9 @@ const CalendarWeek = () => {
                           sx={{
                             width: "6px",
                             height: "100%",
-                            backgroundColor: getTripPlanColor(schedule.tripPlan),
+                            backgroundColor: getTripPlanColor(
+                              schedule.tripPlan
+                            ),
                             flexShrink: 0,
                           }}
                         />
@@ -431,9 +447,10 @@ const CalendarWeek = () => {
                         <Box
                           sx={{
                             flex: 1,
+                            // backgroundColor: "red",
                             display: "flex",
                             alignItems: "center",
-                            padding: isMobile ? "2px 4px" : "4px 8px",
+                            padding: isMobile ? "2px 4px" : "4px 10px",
                             gap: isMobile ? "2px" : "4px",
                             overflow: "hidden",
                           }}
@@ -441,7 +458,7 @@ const CalendarWeek = () => {
                           {/* 시작 시간 */}
                           <Typography
                             sx={{
-                              fontSize: isMobile ? "9px" : "10px",
+                              fontSize: isMobile ? "12px" : "12px",
                               fontWeight: 600,
                               flexShrink: 0,
                               minWidth: isMobile ? "25px" : "30px",
@@ -453,11 +470,12 @@ const CalendarWeek = () => {
                           {/* 일정 메모 */}
                           <Typography
                             sx={{
-                              fontSize: isMobile ? "9px" : "10px",
+                              fontSize: isMobile ? "12px" : "12px",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
                               flex: 1,
+                              textAlign: "center",
                             }}
                           >
                             {schedule.scheduleContent || schedule.scheduleName}
