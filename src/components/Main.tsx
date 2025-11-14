@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import ScheduleModal from "./ScheduleModal";
 import ScheduleItem from "./ScheduleItem";
 import {
@@ -379,6 +380,7 @@ function MonthlyCalendar({
 }
 
 const Main = () => {
+  const navigate = useNavigate();
   const [calendarWeeks, setCalendarWeeks] = useState(6);
   const [reservations, setReservations] = useState([
     { height: 60, text: "", color: "#a29bfe" },
@@ -393,6 +395,8 @@ const Main = () => {
   const [selectedDateSchedules, setSelectedDateSchedules] = useState<
     Schedule[]
   >([]);
+  const [transportOrigin, setTransportOrigin] = useState("");
+  const [transportDestination, setTransportDestination] = useState("");
 
   const colors = ["#a29bfe", "#ff6b6b", "#4ecdc4", "#ffd93d", "#06f79bff"];
 
@@ -489,9 +493,10 @@ const Main = () => {
   // 예약내역 개별 삭제
   const handleDeleteReservation = (index: number) => {
     const updatedReservations = reservations.filter((_, idx) => idx !== index);
-    const finalReservations = updatedReservations.length === 0
-      ? [{ height: 60, text: "", color: "#a29bfe" }]
-      : updatedReservations;
+    const finalReservations =
+      updatedReservations.length === 0
+        ? [{ height: 60, text: "", color: "#a29bfe" }]
+        : updatedReservations;
     setReservations(finalReservations);
     localStorage.setItem("reservations", JSON.stringify(finalReservations));
   };
@@ -499,9 +504,10 @@ const Main = () => {
   // 체크리스트 개별 삭제
   const handleDeleteChecklistItem = (index: number) => {
     const updatedItems = checklistItems.filter((_, idx) => idx !== index);
-    const finalItems = updatedItems.length === 0
-      ? [{ text: "", isChecked: false }]
-      : updatedItems;
+    const finalItems =
+      updatedItems.length === 0
+        ? [{ text: "", isChecked: false }]
+        : updatedItems;
     setChecklistItems(finalItems);
     localStorage.setItem("checklistItems", JSON.stringify(finalItems));
   };
@@ -558,192 +564,288 @@ const Main = () => {
           overflow: "hidden",
         }}
       >
-        {/* 상단 스케줄 */}
+        {/* 상단 날씨 & 교통 */}
         <Box
           sx={{
             width: "100%",
             height: { xs: "220px", lg: "227px" },
             borderRadius: "10px",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
+            gap: { xs: "8px", md: "10px" },
           }}
         >
-          {currentWeather ? (
-            <Box sx={{ width: "100%", height: "100%" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  // gap: "10px",
-                }}
-              >
+          {/* 날씨 영역 */}
+          <Box
+            sx={{
+              flex: 1,
+              backgroundColor: "#fff",
+              borderRadius: "10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {currentWeather ? (
+              <Box sx={{ width: "100%", height: "100%" }}>
                 <Box
                   sx={{
-                    // width: "73px",
-                    // height: "84px",
-                    // backgroundColor: "#f0f0f0",
-                    boxSizing: "border-box",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
                   }}
                 >
-                  <img
-                    src={currentWeather.weather.iconUrl}
-                    alt="weather icon"
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      objectFit: "contain",
+                  <Box
+                    sx={{
+                      boxSizing: "border-box",
                     }}
-                  />
+                  >
+                    <img
+                      src={currentWeather.weather.iconUrl}
+                      alt="weather icon"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    onClick={() => navigate("/weather")}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      paddingTop: "28px",
+                      cursor: "pointer",
+                      "&:hover": {
+                        opacity: 0.8,
+                      },
+                    }}
+                  >
+                    <Box sx={{ fontSize: "24px", fontFamily: "RG" }}>
+                      {currentWeather.temperature.current}°
+                    </Box>
+                    <Box sx={{ fontSize: "12px" }}>
+                      습도: {currentWeather.details.humidity}%
+                    </Box>
+                  </Box>
                 </Box>
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     gap: "10px",
-                    paddingTop: "28px",
-                  }}
-                >
-                  <Box sx={{ fontSize: "24px", fontFamily: "RG" }}>
-                    {currentWeather.temperature.current}°
-                  </Box>
-                  <Box sx={{ fontSize: "12px" }}>
-                    습도: {currentWeather.details.humidity}%
-                  </Box>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Typography
-                  sx={{
-                    backgroundColor: "#555396",
-                    color: "#ffffff",
-                    width: "40%",
-                    padding: "1px 0 1px 0",
-                    fontSize: "12px",
-                    alignContent: "center",
-                    textAlign: "center",
-                    borderRadius: "20px",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    fontWeight: "Bold",
-                  }}
-                >
-                  {currentWeather.alert}
-                </Typography>
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    fontSize: "12px",
-                    paddingBottom: "20px",
-                    paddingTop: "5px",
-                  }}
-                >
-                  최고 {currentWeather.temperature.max}° | 최저{" "}
-                  {currentWeather.temperature.min}°
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "6px",
                     justifyContent: "center",
                     alignItems: "center",
-                    fontSize: "12px",
                   }}
                 >
-                  초미세먼지{" "}
                   <Typography
                     sx={{
-                      width: "80%",
+                      backgroundColor: "#555396",
+                      color: "#ffffff",
+                      width: "40%",
+                      padding: "1px 0 1px 0",
                       fontSize: "12px",
-                      fontWeight: "Bold",
-                      color: "#fff",
-                      backgroundColor: "#63A465",
-                      display: "flex",
-                      justifyContent: "center",
+                      alignContent: "center",
+                      textAlign: "center",
                       borderRadius: "20px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      fontWeight: "Bold",
                     }}
                   >
-                    좋음
+                    {currentWeather.alert}
                   </Typography>
+                  <Box
+                    sx={{
+                      textAlign: "center",
+                      fontSize: "12px",
+                      paddingBottom: "20px",
+                      paddingTop: "5px",
+                    }}
+                  >
+                    최고 {currentWeather.temperature.max}° | 최저{" "}
+                    {currentWeather.temperature.min}°
+                  </Box>
                 </Box>
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    gap: "6px",
+                    flexDirection: "row",
+                    gap: "10px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "6px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontSize: "12px",
+                    }}
+                  >
+                    초미세먼지{" "}
+                    <Typography
+                      sx={{
+                        width: "80%",
+                        fontSize: "12px",
+                        fontWeight: "Bold",
+                        color: "#fff",
+                        backgroundColor: "#63A465",
+                        display: "flex",
+                        justifyContent: "center",
+                        borderRadius: "20px",
+                      }}
+                    >
+                      좋음
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "6px",
 
-                    alignItems: "center",
-                    fontSize: "12px",
-                  }}
-                >
-                  미세먼지{" "}
-                  <Typography
-                    sx={{
-                      width: "90%",
+                      alignItems: "center",
                       fontSize: "12px",
-                      fontWeight: "Bold",
-                      color: "#fff",
-                      backgroundColor: "#63A465",
-                      display: "flex",
-                      justifyContent: "center",
-                      borderRadius: "20px",
                     }}
                   >
-                    좋음
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "6px",
-                    alignItems: "center",
-                    fontSize: "12px",
-                  }}
-                >
-                  자외선{" "}
-                  <Typography
+                    미세먼지{" "}
+                    <Typography
+                      sx={{
+                        width: "90%",
+                        fontSize: "12px",
+                        fontWeight: "Bold",
+                        color: "#fff",
+                        backgroundColor: "#63A465",
+                        display: "flex",
+                        justifyContent: "center",
+                        borderRadius: "20px",
+                      }}
+                    >
+                      좋음
+                    </Typography>
+                  </Box>
+                  <Box
                     sx={{
-                      fontSize: "12px",
-                      fontWeight: "Bold",
-                      color: "#fff",
-                      backgroundColor: "#FF7A00",
                       display: "flex",
-                      justifyContent: "center",
-                      borderRadius: "20px",
-                      width: "100%",
+                      flexDirection: "column",
+                      gap: "6px",
+                      alignItems: "center",
+                      fontSize: "12px",
                     }}
                   >
-                    주의
-                  </Typography>
+                    자외선{" "}
+                    <Typography
+                      sx={{
+                        fontSize: "12px",
+                        fontWeight: "Bold",
+                        color: "#fff",
+                        backgroundColor: "#FF7A00",
+                        display: "flex",
+                        justifyContent: "center",
+                        borderRadius: "20px",
+                        width: "100%",
+                      }}
+                    >
+                      주의
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
+            ) : (
+              <Box>날씨 정보를 불러오는 중...</Box>
+            )}
+          </Box>
+
+          {/* 교통 영역 */}
+          <Box
+            sx={{
+              flex: 0.5,
+              backgroundColor: "#fff",
+              borderRadius: "10px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "16px",
+              gap: "8px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "16px",
+                fontFamily: "RG",
+                paddingBottom: "10px",
+              }}
+            >
+              교통 검색
+            </p>
+            <input
+              type="text"
+              placeholder="출발지"
+              style={{
+                width: "100%",
+                padding: "10px 12px",
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                fontSize: "13px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#555396";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "#ddd";
+              }}
+            />
+            <input
+              type="text"
+              placeholder="도착지"
+              style={{
+                width: "100%",
+                padding: "10px 12px",
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                fontSize: "13px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#555396";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "#ddd";
+              }}
+            />
+            <Box
+              onClick={() => navigate("/transportation")}
+              sx={{
+                width: "90%",
+                backgroundColor: "#1976d2",
+                color: "#fff",
+                padding: "10px",
+                borderRadius: "8px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "600",
+                transition: "background-color 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "#1565c0",
+                },
+              }}
+            >
+              검색하기
             </Box>
-          ) : (
-            <Box>날씨 정보를 불러오는 중...</Box>
-          )}
+          </Box>
         </Box>
         {/* 예약/체크리스트 */}
         <Box
@@ -847,7 +949,10 @@ const Main = () => {
                       const updatedReservations = [...reservations];
                       updatedReservations[idx].text = e.target.value;
                       setReservations(updatedReservations);
-                      localStorage.setItem("reservations", JSON.stringify(updatedReservations));
+                      localStorage.setItem(
+                        "reservations",
+                        JSON.stringify(updatedReservations)
+                      );
                     }}
                     placeholder="00:00 예약장소"
                     style={{

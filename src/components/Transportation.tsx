@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -79,6 +80,7 @@ const Transportation = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [searchParams] = useSearchParams();
 
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<any>(null);
@@ -94,6 +96,14 @@ const Transportation = () => {
   const [markers, setMarkers] = useState<any[]>([]);
   const [polylines, setPolylines] = useState<any[]>([]);
   const [collapsed, setCollapsed] = useState(false);
+
+  // URL 파라미터에서 출발지/도착지 읽어오기
+  useEffect(() => {
+    const originParam = searchParams.get("origin");
+    const destinationParam = searchParams.get("destination");
+    if (originParam) setOrigin(originParam);
+    if (destinationParam) setDestination(destinationParam);
+  }, [searchParams]);
 
   // Kakao Map 초기화
   useEffect(() => {
